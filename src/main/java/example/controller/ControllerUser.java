@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/users")
 public class ControllerUser {
@@ -36,12 +34,12 @@ public class ControllerUser {
         NewUser.setSurname(model.getSurname());
         NewUser.setPatronymic(model.getPatronymic());
         NewUser.setPhone(model.getPhone());
-        return serviceUser.Add(NewUser);
+        return serviceUser.add(NewUser);
     }
 
     @GetMapping("/{idOrPhone}")
     public User Search(@PathVariable("idOrPhone") String idOrPhone){
-        User user = serviceUser.Search(idOrPhone);
+        User user = serviceUser.search(idOrPhone);
 
         if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 
@@ -50,28 +48,28 @@ public class ControllerUser {
 
     @GetMapping("/{idOrPhone}/accounts")
     public Iterable<Account> GetAccounts(@PathVariable("idOrPhone") String idOrPhone){
-        User user = serviceUser.Search(idOrPhone);
+        User user = serviceUser.search(idOrPhone);
 
         if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 
-        return serviceAccount.GetAccountsByUser(user);
+        return serviceAccount.getAccountsByUser(user);
     }
 
     @GetMapping("/{idOrPhone}/transactions")
     public Iterable<Transaction> GetTransaction(@PathVariable("idOrPhone") String user_idOrPhone,
                                                 @RequestParam(name = "bank", defaultValue = "none") String bank_idOrNameOrPhone){
-        User user = serviceUser.Search(user_idOrPhone);
+        User user = serviceUser.search(user_idOrPhone);
 
         if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 
         if(bank_idOrNameOrPhone.equals("none")){
-            return serviceTransaction.GetTransaction(user);
+            return serviceTransaction.getTransaction(user);
         }
 
-        Bank bank = serviceBank.Search(bank_idOrNameOrPhone);
+        Bank bank = serviceBank.search(bank_idOrNameOrPhone);
 
         if(bank == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank not found");
 
-        return serviceTransaction.GetTransactionByBank(user, bank);
+        return serviceTransaction.getTransactionByBank(user, bank);
     }
 }

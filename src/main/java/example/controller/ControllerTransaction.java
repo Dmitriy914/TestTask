@@ -21,25 +21,25 @@ public class ControllerTransaction {
 
     @PostMapping
     public Transaction Add(@RequestBody TransactionModel model){
-        Account send = serviceAccount.Search(model.getAccountSend_IdOrAccountNumber());
-        Account get = serviceAccount.Search(model.getAccountGet_IdOrAccountNumber());
+        Account send = serviceAccount.search(model.getAccountSend_IdOrAccountNumber());
+        Account get = serviceAccount.search(model.getAccountGet_IdOrAccountNumber());
 
         if(get == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account get not found");
         if(send == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account send not found");
 
-        return serviceTransaction.Add(send, get, model.getAmount());
+        return serviceTransaction.add(send, get, model.getAmount());
     }
 
     @GetMapping
     public Iterable<Transaction> Search(@RequestParam String accountSend,
                                         @RequestParam String accountGet,
                                         @RequestParam String sortMode){
-        Account get = serviceAccount.Search(accountGet);
-        Account send = serviceAccount.Search(accountSend);
+        Account get = serviceAccount.search(accountGet);
+        Account send = serviceAccount.search(accountSend);
 
         if(get == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account get not found");
         if(send == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account send not found");
 
-        return serviceTransaction.Search(send, get, sortMode);
+        return serviceTransaction.search(send, get, sortMode);
     }
 }

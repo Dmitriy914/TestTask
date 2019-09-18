@@ -14,20 +14,20 @@ public class ServiceAccount {
     @Autowired
     private AccountRepository repository;
 
-    public Account Add(Account account){
+    public Account add(Account account){
         if(repository.existsByUserAndBank(account.getUser(), account.getBank())){
             throw new DuplicateException("user, bank");
         }
         account.setBalance(BigDecimal.ZERO);
-        account.setAccountNumber(GenerateAccountNumber());
+        account.setAccountNumber(generateAccountNumber());
         while(repository.existsByAccountNumber(account.getAccountNumber())){
-            account.setAccountNumber(GenerateAccountNumber());
+            account.setAccountNumber(generateAccountNumber());
         }
         return repository.save(account);
     }
 
-    public Account Search(String idOrAccountNumber){
-        if(CheckNumeric(idOrAccountNumber)){
+    public Account search(String idOrAccountNumber){
+        if(checkNumeric(idOrAccountNumber)){
             int id = Integer.parseInt(idOrAccountNumber);
             if(repository.existsById(id)) {
                 return repository.findById(id).get();
@@ -40,23 +40,23 @@ public class ServiceAccount {
         return null;
     }
 
-    public Iterable<Account> GetAccountsByUser(User user){
+    public Iterable<Account> getAccountsByUser(User user){
         return repository.findByUserId(user.getId());
     }
 
-    private String GenerateAccountNumber(){
-        String res = String.valueOf(RandomInt(9, 1));
+    private String generateAccountNumber(){
+        String res = String.valueOf(randomInt(9, 1));
         for(int i = 0; i < 9; i++){
-            res += String.valueOf(RandomInt(9, 0));
+            res += String.valueOf(randomInt(9, 0));
         }
         return res;
     }
 
-    private int RandomInt(int max, int min){
+    private int randomInt(int max, int min){
         return (int) (Math.random()*(max - min + 1)) + min;
     }
 
-    private boolean CheckNumeric(String s){
+    private boolean checkNumeric(String s){
         try{
             Integer.parseInt(s);
             return true;

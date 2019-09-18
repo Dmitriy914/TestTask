@@ -11,7 +11,7 @@ public class ServiceBank {
     @Autowired
     private BankRepository repository;
 
-    public Bank Add(Bank bank){
+    public Bank add(Bank bank){
         if(repository.existsByName(bank.getName())) {
             throw new DuplicateException("name");
         }
@@ -21,12 +21,12 @@ public class ServiceBank {
         return repository.save(bank);
     }
 
-    public Iterable<Bank> SearchAll(){
+    public Iterable<Bank> searchAll(){
         return repository.findAll();
     }
 
-    public Bank Search(String idOrNameOrPhone){
-        if(CheckNumeric((idOrNameOrPhone))){
+    public Bank search(String idOrNameOrPhone){
+        if(checkNumeric((idOrNameOrPhone))){
             int id = Integer.parseInt(idOrNameOrPhone);
             if(repository.existsById(id)){
                 return repository.findById(id).get();
@@ -42,7 +42,7 @@ public class ServiceBank {
         return null;
     }
 
-    private boolean CheckNumeric(String s){
+    private boolean checkNumeric(String s){
         try{
             Integer.parseInt(s);
             return true;

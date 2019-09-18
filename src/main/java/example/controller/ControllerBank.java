@@ -18,11 +18,11 @@ public class ControllerBank {
         bank.setName(model.getName());
         bank.setAddress(model.getAddress());
         bank.setPhone(model.getPhone());
-        return service.Add(bank);
+        return service.add(bank);
     }
 
     @GetMapping
     public Iterable<Bank> Search() {
-        return service.SearchAll();
+        return service.searchAll();
     }
 }

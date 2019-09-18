@@ -21,7 +21,7 @@ public class ServiceTransaction {
     private TransactionRepository repository;
 
     @Transactional
-    public Transaction Add(Account send, Account get, BigDecimal amount){
+    public Transaction add(Account send, Account get, BigDecimal amount){
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new AmountException();
         }
@@ -45,7 +45,7 @@ public class ServiceTransaction {
         return repository.save(transaction);
     }
 
-    public Iterable<Transaction> Search(Account accountSend, Account accountGet, String sortMode){
+    public Iterable<Transaction> search(Account accountSend, Account accountGet, String sortMode){
         if(sortMode.equals("Asc")){
             return repository.findByAccountSendAndAccountGetOrderByDateAsc(accountSend, accountGet);
         }
@@ -55,11 +55,11 @@ public class ServiceTransaction {
         return null;
     }
 
-    public Iterable<Transaction> GetTransaction(User user){
+    public Iterable<Transaction> getTransaction(User user){
         return repository.findByUser(user.getId());
     }
 
-    public Iterable<Transaction> GetTransactionByBank(User user, Bank bank){
+    public Iterable<Transaction> getTransactionByBank(User user, Bank bank){
         return repository.findByUserAndBank(user.getId(), bank.getId());
     }
 }

@@ -11,15 +11,15 @@ public class ServiceUser {
     @Autowired
     private UserRepository repository;
 
-    public User Add(User user){
+    public User add(User user){
         if(repository.existsByPhone(user.getPhone())){
             throw new DuplicateException("phone");
         }
         return repository.save(user);
     }
 
-    public User Search(String idOrPhone){
-        if(CheckNumeric((idOrPhone))){
+    public User search(String idOrPhone){
+        if(checkNumeric((idOrPhone))){
             int id = Integer.parseInt(idOrPhone);
             if(repository.existsById(id)){
                 return repository.findById(id).get();
@@ -32,7 +32,7 @@ public class ServiceUser {
         return null;
     }
 
-    private boolean CheckNumeric(String s){
+    private boolean checkNumeric(String s){
         try{
             Integer.parseInt(s);
             return true;
