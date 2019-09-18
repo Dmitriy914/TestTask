@@ -21,8 +21,8 @@ public class ControllerTransaction {
 
     @PostMapping
     public Transaction Add(@RequestBody TransactionModel model){
-        Account send = serviceAccount.search(model.getAccountSend_IdOrAccountNumber());
-        Account get = serviceAccount.search(model.getAccountGet_IdOrAccountNumber());
+        Account send = serviceAccount.search(model.getAccountSendIdOrAccountNumber());
+        Account get = serviceAccount.search(model.getAccountGetIdOrAccountNumber());
 
         if(get == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account get not found");
         if(send == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account send not found");

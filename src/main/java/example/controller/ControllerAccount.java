@@ -27,8 +27,8 @@ public class ControllerAccount {
     @PostMapping
     public Account Add(@RequestBody AccountModel model){
         Account account = new Account();
-        User user = serviceUser.search(model.getUser_idOrPhone());
-        Bank bank = serviceBank.search(model.getBank_idOrNameOrPhone());
+        User user = serviceUser.search(model.getUserIdOrPhone());
+        Bank bank = serviceBank.search(model.getBankIdOrNameOrPhone());
 
         if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         if(bank == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank not found");
