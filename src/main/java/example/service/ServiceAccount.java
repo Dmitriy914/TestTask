@@ -28,16 +28,9 @@ public class ServiceAccount {
 
     public Account search(String idOrAccountNumber){
         if(checkNumeric(idOrAccountNumber)){
-            int id = Integer.parseInt(idOrAccountNumber);
-            if(repository.existsById(id)) {
-                return repository.findById(id).get();
-            }
-            return null;
+            return repository.findById(Integer.parseInt(idOrAccountNumber)).orElse(null);
         }
-        if(repository.existsByAccountNumber(idOrAccountNumber)){
-            return repository.findByAccountNumber(idOrAccountNumber).get();
-        }
-        return null;
+        return repository.findByAccountNumber(idOrAccountNumber).orElse(null);
     }
 
     public Iterable<Account> getAccountsByUser(User user){

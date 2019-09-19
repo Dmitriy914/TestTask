@@ -27,19 +27,12 @@ public class ServiceBank {
 
     public Bank search(String idOrNameOrPhone){
         if(checkNumeric((idOrNameOrPhone))){
-            int id = Integer.parseInt(idOrNameOrPhone);
-            if(repository.existsById(id)){
-                return repository.findById(id).get();
-            }
-            return null;
+            return repository.findById(Integer.parseInt(idOrNameOrPhone)).orElse(null);
         }
         if(repository.existsByName(idOrNameOrPhone)){
             return repository.findByName(idOrNameOrPhone).get();
         }
-        if(repository.existsByPhone(idOrNameOrPhone)){
-            return repository.findByPhone(idOrNameOrPhone).get();
-        }
-        return null;
+        return repository.findByPhone(idOrNameOrPhone).orElse(null);
     }
 
     private boolean checkNumeric(String s){
