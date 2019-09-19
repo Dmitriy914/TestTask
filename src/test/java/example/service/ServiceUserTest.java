@@ -22,10 +22,11 @@ public class ServiceUserTest {
     @Test
     public void add(){
         User user = new User();
-        when(repositoryMock.existsByPhone(null)).thenReturn(false);
+        user.setPhone("phone");
+        when(repositoryMock.existsByPhone("phone")).thenReturn(false);
 
         service.add(user);
-        verify(repositoryMock).existsByPhone(null);
+        verify(repositoryMock).existsByPhone("phone");
         verify(repositoryMock).save(user);
         verifyNoMoreInteractions(repositoryMock);
     }
@@ -33,10 +34,10 @@ public class ServiceUserTest {
     @Test(expected = DuplicateException.class)
     public void addException(){
         User user = new User();
-        when(repositoryMock.existsByPhone(null)).thenReturn(true);
+        user.setPhone("phone");
+        when(repositoryMock.existsByPhone("phone")).thenReturn(true);
 
         service.add(user);
-        verify(repositoryMock).existsByPhone(null);
     }
 
     @Test

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface BankRepository extends CrudRepository<Bank, Integer> {
     boolean existsByName(String name);
-    boolean existsByPhone(String name);
+    boolean existsByPhone(String phone);
     Optional<Bank> findByName(String name);
     Optional<Bank> findByPhone(String phone);
 }
