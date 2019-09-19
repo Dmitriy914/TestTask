@@ -31,11 +31,27 @@ public class ServiceUserTest {
     }
 
     @Test(expected = DuplicateException.class)
-    public void addDuplicate(){
+    public void addException(){
         User user = new User();
         when(repositoryMock.existsByPhone(null)).thenReturn(true);
 
         service.add(user);
         verify(repositoryMock).existsByPhone(null);
+    }
+
+    @Test
+    public void searchById(){
+        service.search("12");
+
+        verify(repositoryMock).findById(12);
+        verifyNoMoreInteractions(repositoryMock);
+    }
+
+    @Test
+    public void searchByPhone(){
+        service.search("8-913-709-09-50");
+
+        verify(repositoryMock).findByPhone("8-913-709-09-50");
+        verifyNoMoreInteractions(repositoryMock);
     }
 }

@@ -22,16 +22,9 @@ public class ServiceUser {
 
     public User search(String idOrPhone){
         if(checkNumeric((idOrPhone))){
-            int id = Integer.parseInt(idOrPhone);
-            if(repository.existsById(id)){
-                return repository.findById(id).get();
-            }
-            return null;
+            return repository.findById(Integer.parseInt(idOrPhone)).orElse(null);
         }
-        if(repository.existsByPhone(idOrPhone)){
-            return repository.findByPhone(idOrPhone).get();
-        }
-        return null;
+        return repository.findByPhone(idOrPhone).orElse(null);
     }
 
     private boolean checkNumeric(String s){
