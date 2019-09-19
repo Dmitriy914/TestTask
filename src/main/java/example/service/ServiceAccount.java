@@ -4,15 +4,17 @@ import example.entity.Account;
 import example.entity.User;
 import example.exception.DuplicateException;
 import example.repository.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
 public class ServiceAccount {
-    @Autowired
-    private AccountRepository repository;
+    private final AccountRepository repository;
+
+    public ServiceAccount(AccountRepository repository) {
+        this.repository = repository;
+    }
 
     public Account add(Account account){
         if(repository.existsByUserAndBank(account.getUser(), account.getBank())){
