@@ -36,4 +36,5 @@ dependencies {
     compile group: 'org.hibernate.validator', name: 'hibernate-validator-annotation-processor', version: '6.0.17.Final'
 
     testCompile("junit:junit")
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.0.0'
 }

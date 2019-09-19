@@ -3,13 +3,15 @@ package example.service;
 import example.entity.User;
 import example.exception.DuplicateException;
 import example.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ServiceUser {
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository repository;
+
+    public ServiceUser(UserRepository repository) {
+        this.repository = repository;
+    }
 
     public User add(User user){
         if(repository.existsByPhone(user.getPhone())){
