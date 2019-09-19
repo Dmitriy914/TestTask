@@ -30,7 +30,10 @@ public class ServiceAccount {
 
     public Account search(String idOrAccountNumber){
         if(checkNumeric(idOrAccountNumber)){
-            return repository.findById(Integer.parseInt(idOrAccountNumber)).orElse(null);
+            int id = Integer.parseInt(idOrAccountNumber);
+            if(repository.existsById(id)){
+                return repository.findById(id).orElse(null);
+            }
         }
         return repository.findByAccountNumber(idOrAccountNumber).orElse(null);
     }
