@@ -32,7 +32,7 @@ public class ServiceBank {
             return repository.findById(Integer.parseInt(idOrNameOrPhone)).orElse(null);
         }
         if(repository.existsByName(idOrNameOrPhone)){
-            return repository.findByName(idOrNameOrPhone).get();
+            return repository.findByName(idOrNameOrPhone).orElse(null);
         }
         return repository.findByPhone(idOrNameOrPhone).orElse(null);
     }

@@ -50,9 +50,9 @@ public class ServiceUserTest {
 
     @Test
     public void searchByPhone(){
-        service.search("8-913-709-09-50");
+        service.search("phone");
 
-        verify(repositoryMock).findByPhone("8-913-709-09-50");
+        verify(repositoryMock).findByPhone("phone");
         verifyNoMoreInteractions(repositoryMock);
     }
 }
