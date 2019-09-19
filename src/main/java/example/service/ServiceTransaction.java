@@ -17,8 +17,11 @@ import java.util.Date;
 
 @Service
 public class ServiceTransaction {
-    @Autowired
-    private TransactionRepository repository;
+    private final TransactionRepository repository;
+
+    public ServiceTransaction(TransactionRepository repository) {
+        this.repository = repository;
+    }
 
     @Transactional
     public Transaction add(Account send, Account get, BigDecimal amount){
