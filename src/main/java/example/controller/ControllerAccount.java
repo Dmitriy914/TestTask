@@ -15,14 +15,17 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/accounts")
 public class ControllerAccount {
-    @Autowired
-    private ServiceAccount serviceAccount;
+    private final ServiceAccount serviceAccount;
 
-    @Autowired
-    private ServiceUser serviceUser;
+    private final ServiceUser serviceUser;
 
-    @Autowired
-    private ServiceBank serviceBank;
+    private final ServiceBank serviceBank;
+
+    public ControllerAccount(ServiceAccount serviceAccount, ServiceUser serviceUser, ServiceBank serviceBank) {
+        this.serviceAccount = serviceAccount;
+        this.serviceUser = serviceUser;
+        this.serviceBank = serviceBank;
+    }
 
     @PostMapping
     public Account Add(@RequestBody AccountModel model){
