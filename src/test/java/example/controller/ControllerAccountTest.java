@@ -47,7 +47,7 @@ public class ControllerAccountTest {
         mvc = MockMvcBuilders.standaloneSetup(new ControllerAccount(serviceAccount, serviceUser, serviceBank)).build();
         model = new AccountModel();
         model.setUserIdOrPhone("1");
-        model.setBankIdOrNameOrPhone("2");
+        model.setBankIdOrNameOrPhone("3");
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ControllerAccountTest {
         account.setBank(bank);
         account.setUser(user);
         when(serviceUser.search("1")).thenReturn(user);
-        when(serviceBank.search("2")).thenReturn(bank);
+        when(serviceBank.search("3")).thenReturn(bank);
 
         mvc.perform(post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8")
