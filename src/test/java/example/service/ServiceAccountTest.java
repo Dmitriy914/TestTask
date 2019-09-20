@@ -9,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 
 import java.math.BigDecimal;
 
@@ -27,7 +26,7 @@ public class ServiceAccountTest {
     }
 
     @Test
-    public void add() {
+    public void addNotExistingAccount() {
         Account account = new Account();
         account.setUser(new User());
         account.setBank(new Bank());
@@ -45,7 +44,7 @@ public class ServiceAccountTest {
     }
 
     @Test(expected = DuplicateException.class)
-    public void addException(){
+    public void addExistingAccount(){
         Account account = new Account();
         account.setUser(new User());
         account.setBank(new Bank());

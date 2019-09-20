@@ -32,7 +32,7 @@ public class ServiceAccount {
         if(checkNumeric(idOrAccountNumber)){
             int id = Integer.parseInt(idOrAccountNumber);
             if(repository.existsById(id)){
-                return repository.findById(id).orElse(null);
+                return repository.findById(id).get();
             }
         }
         return repository.findByAccountNumber(idOrAccountNumber).orElse(null);
