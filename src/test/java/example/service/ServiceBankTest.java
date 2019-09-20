@@ -20,7 +20,7 @@ public class ServiceBankTest {
     }
 
     @Test
-    public void add() {
+    public void addNotExistingBank() {
         Bank bank = new Bank();
         bank.setName("name");
         bank.setPhone("phone");
@@ -35,7 +35,7 @@ public class ServiceBankTest {
     }
 
     @Test(expected = DuplicateException.class)
-    public void addDuplicateName(){
+    public void addBankWithExistingName(){
         Bank bank = new Bank();
         bank.setName("name");
         when(repositoryMock.existsByName("name")).thenReturn(true);
@@ -44,7 +44,7 @@ public class ServiceBankTest {
     }
 
     @Test(expected = DuplicateException.class)
-    public void addDuplicatePhone(){
+    public void addBankWithExistingPhone(){
         Bank bank = new Bank();
         bank.setName("name");
         bank.setPhone("phone");

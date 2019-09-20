@@ -20,7 +20,7 @@ public class ServiceUserTest {
     }
 
     @Test
-    public void add(){
+    public void addNotExistingUser(){
         User user = new User();
         user.setPhone("phone");
         when(repositoryMock.existsByPhone("phone")).thenReturn(false);
@@ -32,7 +32,7 @@ public class ServiceUserTest {
     }
 
     @Test(expected = DuplicateException.class)
-    public void addException(){
+    public void addUserWithExistingPhone(){
         User user = new User();
         user.setPhone("phone");
         when(repositoryMock.existsByPhone("phone")).thenReturn(true);

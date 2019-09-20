@@ -30,7 +30,7 @@ public class ServiceTransactionTest {
     }
 
     @Test
-    public void add(){
+    public void addGoodTransaction(){
         Account get = new Account();
         get.setBalance(BigDecimal.ZERO);
         Account send = new Account();
@@ -46,21 +46,21 @@ public class ServiceTransactionTest {
     }
 
     @Test(expected = AmountException.class)
-    public void addAmountException(){
+    public void addTransactionWithBadAmount(){
         BigDecimal amount = new BigDecimal("-10.01");
 
         service.add(null, null, amount);
     }
 
     @Test(expected = ScaleException.class)
-    public void addScaleException(){
+    public void addTransactionWithBadScale(){
         BigDecimal amount = new BigDecimal("10.001");
 
         service.add(null, null, amount);
     }
 
     @Test(expected = BalanceException.class)
-    public void addBalanceException(){
+    public void addTransactionWithBadBalance(){
         Account send = new Account();
         send.setBalance(new BigDecimal("10.02"));
         BigDecimal amount = new BigDecimal("10.03");
