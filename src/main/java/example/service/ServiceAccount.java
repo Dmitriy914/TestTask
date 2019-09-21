@@ -1,6 +1,7 @@
 package example.service;
 
 import example.entity.Account;
+import example.entity.Bank;
 import example.entity.User;
 import example.exception.DuplicateException;
 import example.repository.AccountRepository;
@@ -16,10 +17,13 @@ public class ServiceAccount {
         this.repository = repository;
     }
 
-    public Account add(Account account){
-        if(repository.existsByUserAndBank(account.getUser(), account.getBank())){
+    public Account add(User user, Bank bank){
+        if(repository.existsByUserAndBank(user, bank)){
             throw new DuplicateException("user, bank");
         }
+        Account account = new Account();
+        account.setUser(user);
+        account.setBank(bank);
         account.setBalance(BigDecimal.ZERO);
         account.setAccountNumber(generateAccountNumber());
         while(repository.existsByAccountNumber(account.getAccountNumber())){

@@ -1,6 +1,7 @@
 package example.service;
 
 import example.entity.Bank;
+import example.model.BankModel;
 import example.repository.BankRepository;
 import example.exception.DuplicateException;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,17 @@ public class ServiceBank {
         this.repository = repository;
     }
 
-    public Bank add(Bank bank){
-        if(repository.existsByName(bank.getName())) {
+    public Bank add(BankModel model){
+        if(repository.existsByName(model.getName())) {
             throw new DuplicateException("name");
         }
-        if(repository.existsByPhone(bank.getPhone())) {
+        if(repository.existsByPhone(model.getPhone())) {
             throw new DuplicateException("phone");
         }
+        Bank bank = new Bank();
+        bank.setName(model.getName());
+        bank.setAddress(model.getAddress());
+        bank.setPhone(model.getPhone());
         return repository.save(bank);
     }
 

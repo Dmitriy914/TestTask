@@ -7,7 +7,6 @@ import example.model.AccountModel;
 import example.service.ServiceAccount;
 import example.service.ServiceBank;
 import example.service.ServiceUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,15 +30,12 @@ public class ControllerAccount {
 
     @PostMapping
     public Account Add(@Valid @RequestBody AccountModel model){
-        Account account = new Account();
         User user = serviceUser.search(model.getUserIdOrPhone());
         Bank bank = serviceBank.search(model.getBankIdOrNameOrPhone());
 
         if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         if(bank == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank not found");
 
-        account.setUser(user);
-        account.setBank(bank);
-        return serviceAccount.add(account);
+        return serviceAccount.add(user, bank);
     }
 }

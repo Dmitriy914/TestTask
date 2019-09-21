@@ -5,7 +5,6 @@ import example.entity.Transaction;
 import example.model.TransactionModel;
 import example.service.ServiceAccount;
 import example.service.ServiceTransaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,11 +14,14 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/transactions")
 public class ControllerTransaction {
-    @Autowired
-    private ServiceTransaction serviceTransaction;
+    private final ServiceTransaction serviceTransaction;
 
-    @Autowired
-    private ServiceAccount serviceAccount;
+    private final ServiceAccount serviceAccount;
+
+    public ControllerTransaction(ServiceTransaction serviceTransaction, ServiceAccount serviceAccount) {
+        this.serviceTransaction = serviceTransaction;
+        this.serviceAccount = serviceAccount;
+    }
 
     @PostMapping
     public Transaction Add(@Valid @RequestBody TransactionModel model){

@@ -6,7 +6,6 @@ import example.service.ServiceAccount;
 import example.service.ServiceBank;
 import example.service.ServiceTransaction;
 import example.service.ServiceUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,27 +15,24 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/users")
 public class ControllerUser {
-    @Autowired
-    private ServiceUser serviceUser;
+    private final ServiceUser serviceUser;
 
-    @Autowired
-    private ServiceBank serviceBank;
+    private final ServiceBank serviceBank;
 
-    @Autowired
-    private ServiceAccount serviceAccount;
+    private final ServiceAccount serviceAccount;
 
-    @Autowired
-    private ServiceTransaction serviceTransaction;
+    private final ServiceTransaction serviceTransaction;
+
+    public ControllerUser(ServiceUser serviceUser, ServiceBank serviceBank, ServiceAccount serviceAccount, ServiceTransaction serviceTransaction) {
+        this.serviceUser = serviceUser;
+        this.serviceBank = serviceBank;
+        this.serviceAccount = serviceAccount;
+        this.serviceTransaction = serviceTransaction;
+    }
 
     @PostMapping()
     public User Add(@Valid @RequestBody UserModel model){
-        User NewUser = new User();
-        NewUser.setAddress(model.getAddress());
-        NewUser.setName(model.getName());
-        NewUser.setSurname(model.getSurname());
-        NewUser.setPatronymic(model.getPatronymic());
-        NewUser.setPhone(model.getPhone());
-        return serviceUser.add(NewUser);
+        return serviceUser.add(model);
     }
 
     @GetMapping("/{idOrPhone}")
