@@ -35,15 +35,26 @@ public class ControllerTransaction {
     }
 
     @GetMapping
-    public Iterable<Transaction> Search(@RequestParam String accountSend,
-                                        @RequestParam String accountGet,
+    public Iterable<Transaction> Search(@RequestParam String accountSendIdOrAccountNumber,
+                                        @RequestParam String accountGetIdOrAccountNumber,
                                         @RequestParam String sortMode){
-        Account get = serviceAccount.search(accountGet);
-        Account send = serviceAccount.search(accountSend);
+        validate(accountSendIdOrAccountNumber, accountGetIdOrAccountNumber, sortMode);
+
+        Account get = serviceAccount.search(accountGetIdOrAccountNumber);
+        Account send = serviceAccount.search(accountSendIdOrAccountNumber);
 
         if(get == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account get not found");
         if(send == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account send not found");
 
         return serviceTransaction.search(send, get, sortMode);
+    }
+
+    private void validate(String send, String get, String sortMode){
+        if(send.equals(""))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameter (accountSendIdOrAccountNumber) should not be empty");
+        if(get.equals(""))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameter (accountGetIdOrAccountNumber) should not be empty");
+        if(!sortMode.equals("Asc") && !sortMode.equals("Desc"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameter (sortMode) should be (Asc) or (Desc)");
     }
 }

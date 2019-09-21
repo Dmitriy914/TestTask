@@ -54,17 +54,15 @@ public class ControllerUser {
     }
 
     @GetMapping("/{idOrPhone}/transactions")
-    public Iterable<Transaction> GetTransaction(@PathVariable("idOrPhone") String user_idOrPhone,
-                                                @RequestParam(name = "bank", defaultValue = "none") String bank_idOrNameOrPhone){
-        User user = serviceUser.search(user_idOrPhone);
+    public Iterable<Transaction> GetTransaction(@PathVariable("idOrPhone") String userIdOrPhone,
+                                                @RequestParam(defaultValue = "none") String bankIdOrNameOrPhone){
+        User user = serviceUser.search(userIdOrPhone);
 
         if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 
-        if(bank_idOrNameOrPhone.equals("none")){
-            return serviceTransaction.getTransaction(user);
-        }
+        if(bankIdOrNameOrPhone.equals("none")) return serviceTransaction.getTransaction(user);
 
-        Bank bank = serviceBank.search(bank_idOrNameOrPhone);
+        Bank bank = serviceBank.search(bankIdOrNameOrPhone);
 
         if(bank == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank not found");
 
