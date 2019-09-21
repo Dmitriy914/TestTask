@@ -4,11 +4,9 @@ import example.entity.Account;
 import example.entity.Bank;
 import example.entity.Transaction;
 import example.entity.User;
-import example.exception.AmountException;
 import example.exception.BalanceException;
 import example.exception.ScaleException;
 import example.repository.TransactionRepository;
-import javafx.scene.transform.Scale;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,13 +41,6 @@ public class ServiceTransactionTest {
         Assert.assertEquals(0, get.getBalance().compareTo(new BigDecimal("10.01")));
         verify(repositoryMock).save(any(Transaction.class));
         verifyNoMoreInteractions(repositoryMock);
-    }
-
-    @Test(expected = AmountException.class)
-    public void addTransactionWithBadAmount(){
-        BigDecimal amount = new BigDecimal("-10.01");
-
-        service.add(null, null, amount);
     }
 
     @Test(expected = ScaleException.class)

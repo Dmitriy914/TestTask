@@ -4,14 +4,11 @@ import example.entity.Account;
 import example.entity.Bank;
 import example.entity.Transaction;
 import example.entity.User;
-import example.exception.AmountException;
 import example.exception.BalanceException;
 import example.exception.ScaleException;
 import example.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -25,9 +22,6 @@ public class ServiceTransaction {
 
     @Transactional
     public Transaction add(Account send, Account get, BigDecimal amount){
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new AmountException();
-        }
         if(amount.scale() > 2){
             throw new ScaleException();
         }

@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/accounts")
 public class ControllerAccount {
@@ -28,7 +30,7 @@ public class ControllerAccount {
     }
 
     @PostMapping
-    public Account Add(@RequestBody AccountModel model){
+    public Account Add(@Valid @RequestBody AccountModel model){
         Account account = new Account();
         User user = serviceUser.search(model.getUserIdOrPhone());
         Bank bank = serviceBank.search(model.getBankIdOrNameOrPhone());

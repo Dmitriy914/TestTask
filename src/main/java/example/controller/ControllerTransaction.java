@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/transactions")
 public class ControllerTransaction {
@@ -20,7 +22,7 @@ public class ControllerTransaction {
     private ServiceAccount serviceAccount;
 
     @PostMapping
-    public Transaction Add(@RequestBody TransactionModel model){
+    public Transaction Add(@Valid @RequestBody TransactionModel model){
         Account send = serviceAccount.search(model.getAccountSendIdOrAccountNumber());
         Account get = serviceAccount.search(model.getAccountGetIdOrAccountNumber());
 

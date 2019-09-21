@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 public class ControllerUser {
@@ -27,7 +29,7 @@ public class ControllerUser {
     private ServiceTransaction serviceTransaction;
 
     @PostMapping()
-    public User Add(@RequestBody UserModel model){
+    public User Add(@Valid @RequestBody UserModel model){
         User NewUser = new User();
         NewUser.setAddress(model.getAddress());
         NewUser.setName(model.getName());

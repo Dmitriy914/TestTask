@@ -6,6 +6,8 @@ import example.service.ServiceBank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/banks")
 public class ControllerBank {
@@ -13,7 +15,7 @@ public class ControllerBank {
     private ServiceBank service;
 
     @PostMapping
-    public Bank Add(@RequestBody BankModel model){
+    public Bank Add(@Valid @RequestBody BankModel model){
         Bank bank = new Bank();
         bank.setName(model.getName());
         bank.setAddress(model.getAddress());
