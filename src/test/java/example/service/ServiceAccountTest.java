@@ -27,30 +27,26 @@ public class ServiceAccountTest {
 
     @Test
     public void addNotExistingAccount() {
-        Account account = new Account();
-        account.setUser(new User());
-        account.setBank(new Bank());
-        when(repositoryMock.existsByUserAndBank(account.getUser(), account.getBank())).thenReturn(false);
+        User user = new User();
+        Bank bank = new Bank();
+        when(repositoryMock.existsByUserAndBank(user, bank)).thenReturn(false);
         when(repositoryMock.existsByAccountNumber(ArgumentMatchers.anyString())).thenReturn(false);
 
-        service.add(account);
+        service.add(user, bank);
 
-        Assert.assertEquals(0, account.getBalance().compareTo(BigDecimal.ZERO));
-        Assert.assertNotNull(account.getAccountNumber());
-        verify(repositoryMock).existsByUserAndBank(account.getUser(), account.getBank());
+        verify(repositoryMock).existsByUserAndBank(user, bank);
         verify(repositoryMock).existsByAccountNumber(ArgumentMatchers.anyString());
-        verify(repositoryMock).save(account);
+        verify(repositoryMock).save(any(Account.class));
         verifyNoMoreInteractions(repositoryMock);
     }
 
     @Test(expected = DuplicateException.class)
     public void addExistingAccount(){
-        Account account = new Account();
-        account.setUser(new User());
-        account.setBank(new Bank());
-        when(repositoryMock.existsByUserAndBank(account.getUser(), account.getBank())).thenReturn(true);
+        User user = new User();
+        Bank bank = new Bank();
+        when(repositoryMock.existsByUserAndBank(user, bank)).thenReturn(true);
 
-        service.add(account);
+        service.add(user, bank);
     }
 
     @Test

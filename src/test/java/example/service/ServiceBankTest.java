@@ -2,6 +2,7 @@ package example.service;
 
 import example.entity.Bank;
 import example.exception.DuplicateException;
+import example.model.BankModel;
 import example.repository.BankRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,37 +22,37 @@ public class ServiceBankTest {
 
     @Test
     public void addNotExistingBank() {
-        Bank bank = new Bank();
-        bank.setName("name");
-        bank.setPhone("phone");
+        BankModel model = new BankModel();
+        model.setName("name");
+        model.setPhone("phone");
         when(repositoryMock.existsByName("name")).thenReturn(false);
         when(repositoryMock.existsByPhone("phone")).thenReturn(false);
 
-        service.add(bank);
+        service.add(model);
         verify(repositoryMock).existsByName("name");
         verify(repositoryMock).existsByPhone("phone");
-        verify(repositoryMock).save(bank);
+        verify(repositoryMock).save(any(Bank.class));
         verifyNoMoreInteractions(repositoryMock);
     }
 
     @Test(expected = DuplicateException.class)
     public void addBankWithExistingName(){
-        Bank bank = new Bank();
-        bank.setName("name");
+        BankModel model = new BankModel();
+        model.setName("name");
         when(repositoryMock.existsByName("name")).thenReturn(true);
 
-        service.add(bank);
+        service.add(model);
     }
 
     @Test(expected = DuplicateException.class)
     public void addBankWithExistingPhone(){
-        Bank bank = new Bank();
-        bank.setName("name");
-        bank.setPhone("phone");
+        BankModel model = new BankModel();
+        model.setName("name");
+        model.setPhone("phone");
         when(repositoryMock.existsByName("name")).thenReturn(false);
         when(repositoryMock.existsByPhone("phone")).thenReturn(true);
 
-        service.add(bank);
+        service.add(model);
     }
 
     @Test

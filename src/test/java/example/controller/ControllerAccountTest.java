@@ -68,7 +68,7 @@ public class ControllerAccountTest {
                 .andDo(print());
         verify(serviceUser).search(model.getUserIdOrPhone());
         verify(serviceBank).search(model.getBankIdOrNameOrPhone());
-        verify(serviceAccount).add(account);
+        verify(serviceAccount).add(account.getUser(), account.getBank());
         verifyNoMoreInteractions(serviceAccount, serviceBank, serviceUser);
     }
 }

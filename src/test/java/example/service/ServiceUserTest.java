@@ -2,6 +2,7 @@ package example.service;
 
 import example.entity.User;
 import example.exception.DuplicateException;
+import example.model.UserModel;
 import example.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,23 +22,23 @@ public class ServiceUserTest {
 
     @Test
     public void addNotExistingUser(){
-        User user = new User();
-        user.setPhone("phone");
+        UserModel model = new UserModel();
+        model.setPhone("phone");
         when(repositoryMock.existsByPhone("phone")).thenReturn(false);
 
-        service.add(user);
+        service.add(model);
         verify(repositoryMock).existsByPhone("phone");
-        verify(repositoryMock).save(user);
+        verify(repositoryMock).save(any(User.class));
         verifyNoMoreInteractions(repositoryMock);
     }
 
     @Test(expected = DuplicateException.class)
     public void addUserWithExistingPhone(){
-        User user = new User();
-        user.setPhone("phone");
+        UserModel model = new UserModel();
+        model.setPhone("phone");
         when(repositoryMock.existsByPhone("phone")).thenReturn(true);
 
-        service.add(user);
+        service.add(model);
     }
 
     @Test
