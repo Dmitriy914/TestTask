@@ -43,12 +43,12 @@ public class ServiceAccount {
     }
 
     private String generateAccountNumber(){
-        String res = String.valueOf(randomInt(9, 1));
+        StringBuilder res = new StringBuilder(String.valueOf(randomInt(9, 1)));
         for(int i = 0; i < 9; i++){
-            res += String.valueOf(randomInt(9, 0));
+            res.append(randomInt(9, 0));
         }
-        if(repository.existsByAccountNumber(res)) return generateAccountNumber();
-        else return res;
+        if(repository.existsByAccountNumber(res.toString())) return generateAccountNumber();
+        else return res.toString();
     }
 
     private int randomInt(int max, int min){
