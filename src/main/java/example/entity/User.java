@@ -4,9 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 @Entity
 @Data
@@ -18,23 +16,18 @@ public class User {
     private Integer id;
 
     @NotNull
-    @NotEmpty
     private String surname;
 
     @NotNull
-    @NotEmpty
     private String name;
 
     @NotNull
-    @NotEmpty
     private String patronymic;
 
     @NotNull
-    @NotEmpty
     private String address;
 
     @NotNull
-    @NotEmpty
     @Column(unique = true)
     private String phone;
 }

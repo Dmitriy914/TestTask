@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -16,16 +15,13 @@ public class Bank {
     private Integer id;
 
     @NotNull
-    @NotEmpty
     @Column(unique = true)
     private String name;
 
     @NotNull
-    @NotEmpty
     private String address;
 
     @NotNull
-    @NotEmpty
     @Column(unique = true)
     private String phone;
 }

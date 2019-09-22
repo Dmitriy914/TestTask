@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
@@ -19,7 +18,6 @@ public class Account {
     private Integer id;
 
     @NotNull
-    @NotEmpty
     @Column(unique = true)
     private String accountNumber;
 
