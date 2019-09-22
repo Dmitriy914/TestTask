@@ -25,12 +25,10 @@ public class ServiceTransaction {
         if(amount.scale() > 2){
             throw new ScaleException();
         }
-        BigDecimal newBalance = send.getBalance().subtract(amount);
-        if(newBalance.compareTo(BigDecimal.ZERO) < 0){
+        send.setBalance(send.getBalance().subtract(amount));
+        if(send.getBalance().compareTo(BigDecimal.ZERO) < 0){
             throw new BalanceException();
         }
-
-        send.setBalance(newBalance);
         get.setBalance(get.getBalance().add(amount));
 
         Transaction transaction = new Transaction();

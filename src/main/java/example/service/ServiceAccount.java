@@ -26,9 +26,6 @@ public class ServiceAccount {
         account.setBank(bank);
         account.setBalance(BigDecimal.ZERO);
         account.setAccountNumber(generateAccountNumber());
-        while(repository.existsByAccountNumber(account.getAccountNumber())){
-            account.setAccountNumber(generateAccountNumber());
-        }
         return repository.save(account);
     }
 
@@ -51,7 +48,8 @@ public class ServiceAccount {
         for(int i = 0; i < 9; i++){
             res += String.valueOf(randomInt(9, 0));
         }
-        return res;
+        if(repository.existsByAccountNumber(res)) return generateAccountNumber();
+        else return res;
     }
 
     private int randomInt(int max, int min){
