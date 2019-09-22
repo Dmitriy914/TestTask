@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -51,22 +52,21 @@ public class ServiceAccountTest {
 
     @Test
     public void searchById() {
-        when(repositoryMock.existsById(12)).thenReturn(true);
+        when(repositoryMock.findById(12)).thenReturn(Optional.of(new Account()));
 
         service.search("12");
 
-        verify(repositoryMock).existsById(12);
         verify(repositoryMock).findById(12);
         verifyNoMoreInteractions(repositoryMock);
     }
 
     @Test
     public void searchByAccountNumber(){
-        when(repositoryMock.existsById(123)).thenReturn(false);
+        when(repositoryMock.findById(123)).thenReturn(Optional.empty());
 
         service.search("123");
 
-        verify(repositoryMock).existsById(123);
+        verify(repositoryMock).findById(123);
         verify(repositoryMock).findByAccountNumber("123");
         verifyNoMoreInteractions(repositoryMock);
     }

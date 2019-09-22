@@ -6,6 +6,8 @@ import example.repository.BankRepository;
 import example.exception.DuplicateException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ServiceBank {
     private final BankRepository repository;
@@ -36,10 +38,8 @@ public class ServiceBank {
         if(checkNumeric((idOrNameOrPhone))){
             return repository.findById(Integer.parseInt(idOrNameOrPhone)).orElse(null);
         }
-        if(repository.existsByName(idOrNameOrPhone)){
-            return repository.findByName(idOrNameOrPhone).orElse(null);
-        }
-        return repository.findByPhone(idOrNameOrPhone).orElse(null);
+        Optional<Bank> bank = repository.findByName(idOrNameOrPhone);
+        return bank.orElseGet(() -> repository.findByPhone(idOrNameOrPhone).orElse(null));
     }
 
     private boolean checkNumeric(String s){

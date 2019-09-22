@@ -7,6 +7,8 @@ import example.repository.BankRepository;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.*;
 
 public class ServiceBankTest {
@@ -73,22 +75,21 @@ public class ServiceBankTest {
 
     @Test
     public void searchByName(){
-        when(repositoryMock.existsByName("name")).thenReturn(true);
+        when(repositoryMock.findByName("name")).thenReturn(Optional.of(new Bank()));
 
         service.search("name");
 
-        verify(repositoryMock).existsByName("name");
         verify(repositoryMock).findByName("name");
         verifyNoMoreInteractions(repositoryMock);
     }
 
     @Test
     public void searchByPhone(){
-        when(repositoryMock.existsByName("phone")).thenReturn(false);
+        when(repositoryMock.findByName("phone")).thenReturn(Optional.empty());
 
         service.search("phone");
 
-        verify(repositoryMock).existsByName("phone");
+        verify(repositoryMock).findByName("phone");
         verify(repositoryMock).findByPhone("phone");
         verifyNoMoreInteractions(repositoryMock);
     }

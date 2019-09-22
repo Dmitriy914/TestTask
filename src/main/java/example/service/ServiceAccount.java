@@ -8,6 +8,7 @@ import example.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class ServiceAccount {
@@ -31,10 +32,8 @@ public class ServiceAccount {
 
     public Account search(String idOrAccountNumber){
         if(checkNumeric(idOrAccountNumber)){
-            int id = Integer.parseInt(idOrAccountNumber);
-            if(repository.existsById(id)){
-                return repository.findById(id).orElse(null);
-            }
+            Optional<Account> account = repository.findById(Integer.parseInt(idOrAccountNumber));
+            if(account.isPresent()) return account.get();
         }
         return repository.findByAccountNumber(idOrAccountNumber).orElse(null);
     }
