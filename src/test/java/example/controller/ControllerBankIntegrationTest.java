@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -26,9 +28,6 @@ public class ControllerBankIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private BankRepository repository;
-
     @Test
     public void saveBankWithStatusOk(){
         // подготавливаю данные к сохранению
@@ -40,21 +39,16 @@ public class ControllerBankIntegrationTest {
         // сохраняю модель
         ResponseEntity<Bank> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, Bank.class);
 
-        // подготавливаю результаты запроса к проверкам
+        // подготавливаю результат запроса к проверкам
         Bank body = response.getBody();
-        Bank bank = repository.findByName("Name").orElse(null);
 
-        // выполняю проверки контроллера
+        // выполняю проверки
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(body);
         assertEquals((Integer) 1, body.getId());
         assertEquals("Name", body.getName());
         assertEquals("Phone", body.getPhone());
         assertEquals("Address", body.getAddress());
-
-        // выполняю проверки репозитория
-        assertNotNull(bank);
-        assertEquals(body, bank);
     }
 
     @Test
@@ -67,13 +61,19 @@ public class ControllerBankIntegrationTest {
         ResponseEntity<String[]> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, String[].class);
         String[] body = response.getBody();
 
-        // проверки контроллера
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(body);
         assertEquals(1, body.length);
         assertEquals("Field (name) should not be empty", body[0]);
+    }
 
-        // проверка репозитория
-        assertFalse(repository.existsByPhone("Phone1"));
+    @Test
+    public void searchAll(){
+        Bank[] banks = restTemplate.getForObject("http://localhost:" + port + "/banks", Bank[].class);
+
+        assertEquals(1, banks.length);
+        assertEquals("Name", banks[0].getName());
+        assertEquals("Phone", banks[0].getPhone());
+        assertEquals("Address", banks[0].getAddress());
     }
 }
