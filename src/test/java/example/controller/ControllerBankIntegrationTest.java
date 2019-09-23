@@ -2,6 +2,8 @@ package example.controller;
 
 import example.entity.Bank;
 import example.model.BankModel;
+import example.repository.BankRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,14 @@ public class ControllerBankIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private BankRepository repository;
+
+    @Before
+    public void initialization(){
+        repository.deleteAll();
+    }
+
     @Test
     public void saveBankWithStatusOk(){
         // подготавливаю данные к сохранению
@@ -36,37 +46,51 @@ public class ControllerBankIntegrationTest {
         // сохраняю модель
         ResponseEntity<Bank> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, Bank.class);
 
-        // подготавливаю результат запроса к проверкам
+        // подготавливаю результаты запроса к проверкам
         Bank body = response.getBody();
+        Bank bank = repository.findByName("Name").orElse(null);
 
-        // выполняю проверки
+        // выполняю проверки контроллера
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(body);
         assertEquals((Integer) 1, body.getId());
         assertEquals("Name", body.getName());
         assertEquals("Phone", body.getPhone());
         assertEquals("Address", body.getAddress());
+
+        // проверяю работу репозитория
+        assertNotNull(bank);
+        assertEquals(body, bank);
     }
 
     @Test
     public void errorSaveBankWithStatusBadRequest(){
         BankModel model = new BankModel();
         model.setName("");
-        model.setPhone("Phone1");
-        model.setAddress("Address1");
+        model.setPhone("Phone");
+        model.setAddress("Address");
 
         ResponseEntity<String[]> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, String[].class);
-
         String[] body = response.getBody();
 
+        // проверка контроллера
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(body);
         assertEquals(1, body.length);
         assertEquals("Field (name) should not be empty", body[0]);
+
+        // проверка репозитория
+        assertFalse(repository.existsByPhone("Phone"));
     }
 
     @Test
     public void searchAll(){
+        Bank bank = new Bank();
+        bank.setName("Name");
+        bank.setAddress("Address");
+        bank.setPhone("Phone");
+        repository.save(bank);
+
         Bank[] banks = restTemplate.getForObject("http://localhost:" + port + "/banks", Bank[].class);
 
         assertEquals(1, banks.length);
