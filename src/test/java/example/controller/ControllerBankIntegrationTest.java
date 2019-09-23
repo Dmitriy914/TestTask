@@ -59,6 +59,7 @@ public class ControllerBankIntegrationTest {
         model.setAddress("Address1");
 
         ResponseEntity<String[]> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, String[].class);
+
         String[] body = response.getBody();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
