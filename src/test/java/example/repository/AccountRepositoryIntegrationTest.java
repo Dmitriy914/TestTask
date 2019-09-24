@@ -79,11 +79,14 @@ public class AccountRepositoryIntegrationTest {
     public void exists(){
         User user = createUser();
         Bank bank = createBank();
+        Bank tmpBank = new Bank();
+        tmpBank.setId(5);
         Account account = createAccount(user, bank);
         repository.save(account);
 
         assertTrue(repository.existsByAccountNumber(account.getAccountNumber()));
         assertTrue(repository.existsByUserAndBank(user, bank));
         assertFalse(repository.existsByAccountNumber("12346"));
+        assertFalse(repository.existsByUserAndBank(user, tmpBank));
     }
 }
