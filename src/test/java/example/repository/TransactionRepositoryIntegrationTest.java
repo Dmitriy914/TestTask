@@ -14,6 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class TransactionRepositoryIntegrationTest {
@@ -21,15 +25,12 @@ public class TransactionRepositoryIntegrationTest {
     private TransactionRepository repository;
 
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private BankRepository bankRepository;
 
-    private Bank createBank(){
+    private Bank createBankRandom(){
         Bank bank = new Bank();
         bank.setName(RandomStringUtils.randomAlphabetic(10));
         bank.setAddress(RandomStringUtils.randomAlphabetic(10));
@@ -37,7 +38,7 @@ public class TransactionRepositoryIntegrationTest {
         return bankRepository.save(bank);
     }
 
-    private User createUser(){
+    private User createUserRandom(){
         User user = new User();
         user.setAddress(RandomStringUtils.randomAlphabetic(10));
         user.setName(RandomStringUtils.randomAlphabetic(10));
@@ -47,25 +48,72 @@ public class TransactionRepositoryIntegrationTest {
         return userRepository.save(user);
     }
 
-    private Account createAccount(User user, Bank bank){
+    private Account createAccountRandom(User user, Bank bank){
         Account account = new Account();
         account.setUser(user);
         account.setBank(bank);
         account.setAccountNumber(RandomStringUtils.randomNumeric(10));
         account.setBalance(BigDecimal.ZERO);
-        return accountRepository.save(account);
+        return account;
     }
 
-    private Transaction createTransaction(Account send, Account get, String amount){
+    private Transaction createTransaction(Account send, Account get, String amount, long millisec){
         Transaction transaction = new Transaction();
         transaction.setAccountSend(send);
         transaction.setAccountGet(get);
         transaction.setAmount(new BigDecimal(amount));
-        transaction.setDate(new Date());
+        transaction.setDate(new Date(millisec));
         return repository.save(transaction);
     }
-    @Test
-    public void test(){
 
+    @Test
+    public void findByAccountSendAndAccountGetOrderByDateAsc(){
+        Account send = createAccountRandom(createUserRandom(), createBankRandom());
+        Account get = createAccountRandom(createUserRandom(), createBankRandom());
+        Transaction transaction1 = createTransaction(send, get, "12", 1L);
+        Transaction transaction2 = createTransaction(send, get, "21", 2L);
+
+        Iterable<Transaction> findTransactionByDateAsc = repository.findByAccountSendAndAccountGetOrderByDateAsc(send, get);
+
+        assertThat(findTransactionByDateAsc, contains(transaction1, transaction2));
     }
+
+    @Test
+    public void findByAccountSendAndAccountGetOrderByDateDesc(){
+        Account send = createAccountRandom(createUserRandom(), createBankRandom());
+        Account get = createAccountRandom(createUserRandom(), createBankRandom());
+        Transaction transaction1 = createTransaction(send, get, "12", 1L);
+        Transaction transaction2 = createTransaction(send, get, "21", 2L);
+
+        Iterable<Transaction> findTransactionByDateDesc = repository.findByAccountSendAndAccountGetOrderByDateDesc(send, get);
+
+        assertThat(findTransactionByDateDesc, contains(transaction2, transaction1));
+    }
+
+    @Test
+    public void findByUser(){
+        User user = createUserRandom();
+        Transaction transaction1 = createTransaction(createAccountRandom(user, createBankRandom()), createAccountRandom(createUserRandom(), createBankRandom()), "12", 1L);
+        Transaction transaction2 = createTransaction(createAccountRandom(createUserRandom(), createBankRandom()), createAccountRandom(user, createBankRandom()), "21", 2L);
+
+        Iterable<Transaction> findByUser = repository.findByUser(user.getId());
+
+        assertThat(findByUser, containsInAnyOrder(transaction1, transaction2));
+    }
+
+    @Test
+    public void findByUserAndBank(){
+        User user = createUserRandom();
+        Bank bank = createBankRandom();
+        Account account = createAccountRandom(user, bank);
+        Transaction transaction1 = createTransaction(account, createAccountRandom(createUserRandom(), bank), "123", 1L);
+        Transaction transaction2 = createTransaction(createAccountRandom(createUserRandom(), createBankRandom()), account, "132", 2L);
+        createTransaction(createAccountRandom(user, createBankRandom()), createAccountRandom(createUserRandom(), bank), "213", 3L);
+        createTransaction(createAccountRandom(createUserRandom(), createBankRandom()), createAccountRandom(createUserRandom(), createBankRandom()), "231", 4L);
+
+        Iterable<Transaction> findByUser = repository.findByUserAndBank(user.getId(), bank.getId());
+
+        assertThat(findByUser, containsInAnyOrder(transaction1, transaction2));
+    }
+
 }
