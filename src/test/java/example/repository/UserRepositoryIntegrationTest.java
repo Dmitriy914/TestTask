@@ -23,13 +23,12 @@ public class UserRepositoryIntegrationTest {
         user.setSurname(RandomStringUtils.randomAlphabetic(10));
         user.setPatronymic(RandomStringUtils.randomAlphabetic(10));
         user.setPhone(RandomStringUtils.randomAlphabetic(10));
-        return user;
+        return repository.save(user);
     }
 
     @Test
     public void findByPhone(){
         User user = createUserRandom();
-        repository.save(user);
 
         User saveUser = repository.findByPhone(user.getPhone()).orElse(null);
 
@@ -39,7 +38,6 @@ public class UserRepositoryIntegrationTest {
     @Test
     public void existsByPhone(){
         User user = createUserRandom();
-        repository.save(user);
 
         assertTrue(repository.existsByPhone(user.getPhone()));
     }

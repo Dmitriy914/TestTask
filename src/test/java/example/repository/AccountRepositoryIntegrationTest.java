@@ -45,20 +45,19 @@ public class AccountRepositoryIntegrationTest {
         return userRepository.save(user);
     }
 
-    private Account createAccount(User user, Bank bank){
+    private Account createAccountRandom(User user, Bank bank){
         Account account = new Account();
         account.setUser(user);
         account.setBank(bank);
         account.setAccountNumber(RandomStringUtils.randomNumeric(10));
         account.setBalance(BigDecimal.ZERO);
-        return account;
+        return repository.save(account);
     }
 
     @Test
     public void findByUserId(){
         User user = createUserRandom();
-        Account account = createAccount(user, createBankRandom());
-        repository.save(account);
+        Account account = createAccountRandom(user, createBankRandom());
 
         Iterable<Account> findAccounts = repository.findByUserId(user.getId());
 
@@ -67,8 +66,7 @@ public class AccountRepositoryIntegrationTest {
 
     @Test
     public void findByAccountNumber(){
-        Account account = createAccount(createUserRandom(), createBankRandom());
-        repository.save(account);
+        Account account = createAccountRandom(createUserRandom(), createBankRandom());
 
         Account findAccount = repository.findByAccountNumber(account.getAccountNumber()).orElse(null);
 
@@ -81,8 +79,7 @@ public class AccountRepositoryIntegrationTest {
         User user = createUserRandom();
         Bank bank = createBankRandom();
         Bank tmpBank = createBankRandom();
-        Account account = createAccount(user, bank);
-        repository.save(account);
+        Account account = createAccountRandom(user, bank);
 
         assertTrue(repository.existsByAccountNumber(account.getAccountNumber()));
         assertTrue(repository.existsByUserAndBank(user, bank));

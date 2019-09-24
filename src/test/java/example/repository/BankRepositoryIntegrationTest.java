@@ -21,13 +21,12 @@ public class BankRepositoryIntegrationTest {
         bank.setName(RandomStringUtils.randomAlphabetic(10));
         bank.setAddress(RandomStringUtils.randomAlphabetic(10));
         bank.setPhone(RandomStringUtils.randomAlphabetic(10));
-        return bank;
+        return repository.save(bank);
     }
 
     @Test
     public void findByName(){
         Bank bank = createBankRandom();
-        repository.save(bank);
 
         Bank findBank = repository.findByName(bank.getName()).orElse(null);
 
@@ -38,7 +37,6 @@ public class BankRepositoryIntegrationTest {
     @Test
     public void findByPhone(){
         Bank bank = createBankRandom();
-        repository.save(bank);
 
         Bank findBank = repository.findByPhone(bank.getPhone()).orElse(null);
 
@@ -49,7 +47,6 @@ public class BankRepositoryIntegrationTest {
     @Test
     public void exists(){
         Bank bank = createBankRandom();
-        repository.save(bank);
 
         assertTrue(repository.existsByName(bank.getName()));
         assertTrue(repository.existsByPhone(bank.getPhone()));
