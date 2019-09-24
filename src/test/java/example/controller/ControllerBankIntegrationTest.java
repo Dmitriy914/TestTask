@@ -3,6 +3,7 @@ package example.controller;
 import example.entity.Bank;
 import example.model.BankModel;
 import example.repository.BankRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -35,67 +37,56 @@ public class ControllerBankIntegrationTest {
         repository.deleteAll();
     }
 
+    private BankModel createBankModelRandom(){
+        BankModel model = new BankModel();
+        model.setName(RandomStringUtils.randomAlphabetic(10));
+        model.setAddress(RandomStringUtils.randomAlphabetic(10));
+        model.setPhone(RandomStringUtils.randomAlphabetic(10));
+        return model;
+    }
+
+    private Bank createBankRandom(){
+        Bank bank = new Bank();
+        bank.setName(RandomStringUtils.randomAlphabetic(10));
+        bank.setAddress(RandomStringUtils.randomAlphabetic(10));
+        bank.setPhone(RandomStringUtils.randomAlphabetic(10));
+        return repository.save(bank);
+    }
+
     @Test
     public void saveBankWithStatusOk(){
-        // подготавливаю данные к сохранению
-        BankModel model = new BankModel();
-        model.setName("Name");
-        model.setPhone("Phone");
-        model.setAddress("Address");
+        BankModel model = createBankModelRandom();
 
-        // сохраняю модель
         ResponseEntity<Bank> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, Bank.class);
 
-        // подготавливаю результаты запроса к проверкам
-        Bank body = response.getBody();
-        Bank bank = repository.findByName("Name").orElse(null);
+        Bank responseBody = response.getBody();
+        Bank saveBank = repository.findByName(model.getName()).orElse(null);
 
-        // выполняю проверки контроллера
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(body);
-        assertEquals((Integer) 1, body.getId());
-        assertEquals("Name", body.getName());
-        assertEquals("Phone", body.getPhone());
-        assertEquals("Address", body.getAddress());
-
-        // проверяю работу репозитория
-        assertNotNull(bank);
-        assertEquals(body, bank);
+        assertNotNull(responseBody);
+        assertEquals(saveBank, responseBody);
     }
 
     @Test
     public void errorSaveBankWithStatusBadRequest(){
-        BankModel model = new BankModel();
-        model.setName("");
-        model.setPhone("Phone");
-        model.setAddress("Address");
+        BankModel errorModel = createBankModelRandom();
+        errorModel.setName("");
 
-        ResponseEntity<String[]> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, String[].class);
-        String[] body = response.getBody();
+        ResponseEntity<String[]> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", errorModel, String[].class);
+        String[] responseBody = response.getBody();
 
-        // проверка контроллера
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNotNull(body);
-        assertEquals(1, body.length);
-        assertEquals("Field (name) should not be empty", body[0]);
-
-        // проверка репозитория
-        assertFalse(repository.existsByPhone("Phone"));
+        assertThat(responseBody, arrayContainingInAnyOrder("Field (name) should not be empty"));
     }
 
     @Test
     public void searchAll(){
-        Bank bank = new Bank();
-        bank.setName("Name");
-        bank.setAddress("Address");
-        bank.setPhone("Phone");
-        repository.save(bank);
+        Bank bank1 = createBankRandom();
+        Bank bank2 = createBankRandom();
 
         Bank[] banks = restTemplate.getForObject("http://localhost:" + port + "/banks", Bank[].class);
 
-        assertEquals(1, banks.length);
-        assertEquals("Name", banks[0].getName());
-        assertEquals("Phone", banks[0].getPhone());
-        assertEquals("Address", banks[0].getAddress());
+        assertEquals(2, banks.length);
+        assertThat(banks, arrayContainingInAnyOrder(bank1, bank2));
     }
 }
