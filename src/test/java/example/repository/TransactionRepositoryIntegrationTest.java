@@ -12,14 +12,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.*;
-
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class AccountRepositoryIntegrationTest {
+public class TransactionRepositoryIntegrationTest {
     @Autowired
-    private AccountRepository repository;
+    private TransactionRepository repository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -27,7 +27,7 @@ public class AccountRepositoryIntegrationTest {
     @Autowired
     private BankRepository bankRepository;
 
-    private Bank createBankRandom(){
+    private Bank createBank(){
         Bank bank = new Bank();
         bank.setName(RandomStringUtils.randomAlphabetic(10));
         bank.setAddress(RandomStringUtils.randomAlphabetic(10));
@@ -35,7 +35,7 @@ public class AccountRepositoryIntegrationTest {
         return bankRepository.save(bank);
     }
 
-    private User createUserRandom(){
+    private User createUser(){
         User user = new User();
         user.setAddress(RandomStringUtils.randomAlphabetic(10));
         user.setName(RandomStringUtils.randomAlphabetic(10));
@@ -51,42 +51,11 @@ public class AccountRepositoryIntegrationTest {
         account.setBank(bank);
         account.setAccountNumber(RandomStringUtils.randomNumeric(10));
         account.setBalance(BigDecimal.ZERO);
-        return account;
+        return accountRepository.save(account);
     }
 
     @Test
-    public void findByUserId(){
-        User user = createUserRandom();
-        Account account = createAccount(user, createBankRandom());
-        repository.save(account);
+    public void test(){
 
-        Iterable<Account> findAccounts = repository.findByUserId(user.getId());
-
-        assertThat(findAccounts, containsInAnyOrder(account));
-    }
-
-    @Test
-    public void findByAccountNumber(){
-        Account account = createAccount(createUserRandom(), createBankRandom());
-        repository.save(account);
-
-        Account findAccount = repository.findByAccountNumber(account.getAccountNumber()).orElse(null);
-
-        assertNotNull(findAccount);
-        assertEquals(account, findAccount);
-    }
-
-    @Test
-    public void exists(){
-        User user = createUserRandom();
-        Bank bank = createBankRandom();
-        Bank tmpBank = createBankRandom();
-        Account account = createAccount(user, bank);
-        repository.save(account);
-
-        assertTrue(repository.existsByAccountNumber(account.getAccountNumber()));
-        assertTrue(repository.existsByUserAndBank(user, bank));
-        assertFalse(repository.existsByAccountNumber("12346"));
-        assertFalse(repository.existsByUserAndBank(user, tmpBank));
     }
 }

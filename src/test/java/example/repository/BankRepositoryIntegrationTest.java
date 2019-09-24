@@ -1,6 +1,7 @@
 package example.repository;
 
 import example.entity.Bank;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,17 @@ public class BankRepositoryIntegrationTest {
     @Autowired
     private BankRepository repository;
 
-    private Bank createBank(){
+    private Bank createBankRandom(){
         Bank bank = new Bank();
-        bank.setName("Name");
-        bank.setAddress("Address");
-        bank.setPhone("Phone");
+        bank.setName(RandomStringUtils.randomAlphabetic(10));
+        bank.setAddress(RandomStringUtils.randomAlphabetic(10));
+        bank.setPhone(RandomStringUtils.randomAlphabetic(10));
         return bank;
     }
 
     @Test
     public void findByName(){
-        Bank bank = createBank();
+        Bank bank = createBankRandom();
         repository.save(bank);
 
         Bank findBank = repository.findByName(bank.getName()).orElse(null);
@@ -36,7 +37,7 @@ public class BankRepositoryIntegrationTest {
 
     @Test
     public void findByPhone(){
-        Bank bank = createBank();
+        Bank bank = createBankRandom();
         repository.save(bank);
 
         Bank findBank = repository.findByPhone(bank.getPhone()).orElse(null);
@@ -47,7 +48,7 @@ public class BankRepositoryIntegrationTest {
 
     @Test
     public void exists(){
-        Bank bank = createBank();
+        Bank bank = createBankRandom();
         repository.save(bank);
 
         assertTrue(repository.existsByName(bank.getName()));

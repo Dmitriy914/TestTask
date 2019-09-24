@@ -1,6 +1,7 @@
 package example.repository;
 
 import example.entity.User;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,30 +16,31 @@ public class UserRepositoryIntegrationTest {
     @Autowired
     private UserRepository repository;
 
-    private User createUser(){
+    private User createUserRandom(){
         User user = new User();
-        user.setAddress("Address");
-        user.setName("Name");
-        user.setSurname("Surname");
-        user.setPatronymic("Patronymic");
-        user.setPhone("Phone");
+        user.setAddress(RandomStringUtils.randomAlphabetic(10));
+        user.setName(RandomStringUtils.randomAlphabetic(10));
+        user.setSurname(RandomStringUtils.randomAlphabetic(10));
+        user.setPatronymic(RandomStringUtils.randomAlphabetic(10));
+        user.setPhone(RandomStringUtils.randomAlphabetic(10));
         return user;
     }
 
     @Test
     public void findByPhone(){
-        User user = createUser();
+        User user = createUserRandom();
         repository.save(user);
 
-        User saveUser = repository.findByPhone("Phone").orElse(null);
+        User saveUser = repository.findByPhone(user.getPhone()).orElse(null);
 
         assertEquals(user, saveUser);
     }
 
     @Test
     public void existsByPhone(){
-        assertFalse(repository.existsByPhone("Phone"));
-        repository.save(createUser());
-        assertTrue(repository.existsByPhone("Phone"));
+        User user = createUserRandom();
+        repository.save(user);
+
+        assertTrue(repository.existsByPhone(user.getPhone()));
     }
 }

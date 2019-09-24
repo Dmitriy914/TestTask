@@ -5,6 +5,7 @@ import example.entity.Bank;
 import example.entity.User;
 import example.exception.DuplicateException;
 import example.repository.AccountRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -43,12 +44,9 @@ public class ServiceAccount {
     }
 
     private String generateAccountNumber(){
-        StringBuilder res = new StringBuilder(String.valueOf(randomInt(9, 1)));
-        for(int i = 0; i < 9; i++){
-            res.append(randomInt(9, 0));
-        }
-        if(repository.existsByAccountNumber(res.toString())) return generateAccountNumber();
-        else return res.toString();
+        String res = RandomStringUtils.randomNumeric(10);
+        if(repository.existsByAccountNumber(res)) return generateAccountNumber();
+        else return res;
     }
 
     private int randomInt(int max, int min){
