@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.junit.Assert.*;
 
-public class ControllerBankIntegrationTest extends SuperTest{
+public class ControllerBankIntegrationTest extends SuperControllerTest{
 
     @Test
     public void saveBankWithStatusOk(){

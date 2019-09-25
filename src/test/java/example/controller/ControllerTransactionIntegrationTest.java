@@ -12,7 +12,7 @@ import java.util.HashMap;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 
-public class ControllerTransactionIntegrationTest extends SuperTest{
+public class ControllerTransactionIntegrationTest extends SuperControllerTest{
 
     @Test
     public void saveTransactionWithStatusOk(){

@@ -26,7 +26,7 @@ import java.util.Date;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = "test")
-public class SuperTest {
+public class SuperControllerTest {
     @LocalServerPort
     protected int port;
 
