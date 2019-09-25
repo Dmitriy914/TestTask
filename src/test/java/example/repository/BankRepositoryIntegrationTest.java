@@ -16,7 +16,7 @@ public class BankRepositoryIntegrationTest {
     @Autowired
     private BankRepository repository;
 
-    private Bank createBankRandom(){
+    private Bank createAndSaveBankRandom(){
         Bank bank = new Bank();
         bank.setName(RandomStringUtils.randomAlphabetic(10));
         bank.setAddress(RandomStringUtils.randomAlphabetic(10));
@@ -26,31 +26,29 @@ public class BankRepositoryIntegrationTest {
 
     @Test
     public void findByName(){
-        Bank bank = createBankRandom();
+        Bank bank = createAndSaveBankRandom();
 
-        Bank findBank = repository.findByName(bank.getName()).orElse(null);
+        Bank foundBank = repository.findByName(bank.getName()).orElse(null);
 
-        assertNotNull(findBank);
-        assertEquals(bank, findBank);
+        assertEquals(bank, foundBank);
     }
 
     @Test
     public void findByPhone(){
-        Bank bank = createBankRandom();
+        Bank bank = createAndSaveBankRandom();
 
-        Bank findBank = repository.findByPhone(bank.getPhone()).orElse(null);
+        Bank foundBank = repository.findByPhone(bank.getPhone()).orElse(null);
 
-        assertNotNull(findBank);
-        assertEquals(bank, findBank);
+        assertEquals(bank, foundBank);
     }
 
     @Test
     public void exists(){
-        Bank bank = createBankRandom();
+        Bank bank = createAndSaveBankRandom();
 
         assertTrue(repository.existsByName(bank.getName()));
         assertTrue(repository.existsByPhone(bank.getPhone()));
-        assertFalse(repository.existsByPhone("Phone1"));
-        assertFalse(repository.existsByName("Name1"));
+        assertFalse(repository.existsByPhone("NotExistsPhone"));
+        assertFalse(repository.existsByName("NotExistsName"));
     }
 }

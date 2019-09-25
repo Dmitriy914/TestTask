@@ -16,7 +16,7 @@ public class UserRepositoryIntegrationTest {
     @Autowired
     private UserRepository repository;
 
-    private User createUserRandom(){
+    private User createAndSaveUserRandom(){
         User user = new User();
         user.setAddress(RandomStringUtils.randomAlphabetic(10));
         user.setName(RandomStringUtils.randomAlphabetic(10));
@@ -28,17 +28,18 @@ public class UserRepositoryIntegrationTest {
 
     @Test
     public void findByPhone(){
-        User user = createUserRandom();
+        User user = createAndSaveUserRandom();
 
-        User saveUser = repository.findByPhone(user.getPhone()).orElse(null);
+        User foundUser = repository.findByPhone(user.getPhone()).orElse(null);
 
-        assertEquals(user, saveUser);
+        assertEquals(user, foundUser);
     }
 
     @Test
     public void existsByPhone(){
-        User user = createUserRandom();
+        User user = createAndSaveUserRandom();
 
         assertTrue(repository.existsByPhone(user.getPhone()));
+        assertFalse(repository.existsByPhone("NotExistsPhone"));
     }
 }

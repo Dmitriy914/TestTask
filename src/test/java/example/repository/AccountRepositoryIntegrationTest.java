@@ -27,7 +27,7 @@ public class AccountRepositoryIntegrationTest {
     @Autowired
     private BankRepository bankRepository;
 
-    private Bank createBankRandom(){
+    private Bank createAndSaveBankRandom(){
         Bank bank = new Bank();
         bank.setName(RandomStringUtils.randomAlphabetic(10));
         bank.setAddress(RandomStringUtils.randomAlphabetic(10));
@@ -35,7 +35,7 @@ public class AccountRepositoryIntegrationTest {
         return bankRepository.save(bank);
     }
 
-    private User createUserRandom(){
+    private User createAndSaveUserRandom(){
         User user = new User();
         user.setAddress(RandomStringUtils.randomAlphabetic(10));
         user.setName(RandomStringUtils.randomAlphabetic(10));
@@ -45,7 +45,7 @@ public class AccountRepositoryIntegrationTest {
         return userRepository.save(user);
     }
 
-    private Account createAccountRandom(User user, Bank bank){
+    private Account createAndSaveAccountRandom(User user, Bank bank){
         Account account = new Account();
         account.setUser(user);
         account.setBank(bank);
@@ -56,34 +56,34 @@ public class AccountRepositoryIntegrationTest {
 
     @Test
     public void findByUserId(){
-        User user = createUserRandom();
-        Account account = createAccountRandom(user, createBankRandom());
+        User user = createAndSaveUserRandom();
+        Account account1 = createAndSaveAccountRandom(user, createAndSaveBankRandom());
+        Account account2 = createAndSaveAccountRandom(user, createAndSaveBankRandom());
 
-        Iterable<Account> findAccounts = repository.findByUserId(user.getId());
+        Iterable<Account> foundAccounts = repository.findByUserId(user.getId());
 
-        assertThat(findAccounts, containsInAnyOrder(account));
+        assertThat(foundAccounts, containsInAnyOrder(account1, account2));
     }
 
     @Test
     public void findByAccountNumber(){
-        Account account = createAccountRandom(createUserRandom(), createBankRandom());
+        Account account = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
 
-        Account findAccount = repository.findByAccountNumber(account.getAccountNumber()).orElse(null);
+        Account foundAccount = repository.findByAccountNumber(account.getAccountNumber()).orElse(null);
 
-        assertNotNull(findAccount);
-        assertEquals(account, findAccount);
+        assertEquals(account, foundAccount);
     }
 
     @Test
     public void exists(){
-        User user = createUserRandom();
-        Bank bank = createBankRandom();
-        Bank tmpBank = createBankRandom();
-        Account account = createAccountRandom(user, bank);
+        User user = createAndSaveUserRandom();
+        Bank userBank = createAndSaveBankRandom();
+        Bank freeBank = createAndSaveBankRandom();
+        Account account = createAndSaveAccountRandom(user, userBank);
 
         assertTrue(repository.existsByAccountNumber(account.getAccountNumber()));
-        assertTrue(repository.existsByUserAndBank(user, bank));
-        assertFalse(repository.existsByAccountNumber("12346"));
-        assertFalse(repository.existsByUserAndBank(user, tmpBank));
+        assertTrue(repository.existsByUserAndBank(user, userBank));
+        assertFalse(repository.existsByAccountNumber("NotExistsAccountNumber"));
+        assertFalse(repository.existsByUserAndBank(user, freeBank));
     }
 }
