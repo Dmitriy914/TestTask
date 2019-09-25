@@ -2,55 +2,19 @@ package example.controller;
 
 import example.entity.Bank;
 import example.model.BankModel;
-import example.repository.BankRepository;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles(profiles = "test")
-public class ControllerBankIntegrationTest {
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Autowired
-    private BankRepository bankRepository;
+public class ControllerBankIntegrationTest extends SuperTest{
 
     @Before
     public void clean(){
         bankRepository.deleteAll();
-    }
-
-    private BankModel createBankModelRandom(){
-        BankModel model = new BankModel();
-        model.setName(RandomStringUtils.randomAlphabetic(10));
-        model.setAddress(RandomStringUtils.randomAlphabetic(10));
-        model.setPhone(RandomStringUtils.randomAlphabetic(10));
-        return model;
-    }
-
-    private Bank createAndSaveBankRandom(){
-        Bank bank = new Bank();
-        bank.setName(RandomStringUtils.randomAlphabetic(10));
-        bank.setAddress(RandomStringUtils.randomAlphabetic(10));
-        bank.setPhone(RandomStringUtils.randomAlphabetic(10));
-        return bankRepository.save(bank);
     }
 
     @Test
