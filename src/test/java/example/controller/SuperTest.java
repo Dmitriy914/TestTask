@@ -65,10 +65,9 @@ public class SuperTest {
         return model;
     }
 
-    TransactionModel createTransactionModelRandom(Account send, Account get, String amount){
+    TransactionModel createTransactionModel(Account send, Account get, String amount){
         return new TransactionModel(send.getAccountNumber(), get.getAccountNumber(), new BigDecimal(amount));
     }
-
 
 
 
@@ -94,7 +93,7 @@ public class SuperTest {
         Account account = new Account();
         account.setUser(user);
         account.setBank(bank);
-        account.setBalance(BigDecimal.ZERO.setScale(2));
+        account.setBalance(new BigDecimal("100.00"));
         account.setAccountNumber(RandomStringUtils.randomAlphabetic(10));
         return accountRepository.save(account);
     }

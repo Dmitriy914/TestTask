@@ -12,11 +12,6 @@ import static org.junit.Assert.*;
 
 public class ControllerBankIntegrationTest extends SuperTest{
 
-    @Before
-    public void clean(){
-        bankRepository.deleteAll();
-    }
-
     @Test
     public void saveBankWithStatusOk(){
         BankModel model = createBankModelRandom();
@@ -46,6 +41,7 @@ public class ControllerBankIntegrationTest extends SuperTest{
 
     @Test
     public void searchAll(){
+        bankRepository.deleteAll();
         Bank bank1 = createAndSaveBankRandom();
         Bank bank2 = createAndSaveBankRandom();
 
