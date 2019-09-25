@@ -30,11 +30,11 @@ public class ControllerBankIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private BankRepository repository;
+    private BankRepository bankRepository;
 
     @Before
     public void clean(){
-        repository.deleteAll();
+        bankRepository.deleteAll();
     }
 
     private BankModel createBankModelRandom(){
@@ -50,7 +50,7 @@ public class ControllerBankIntegrationTest {
         bank.setName(RandomStringUtils.randomAlphabetic(10));
         bank.setAddress(RandomStringUtils.randomAlphabetic(10));
         bank.setPhone(RandomStringUtils.randomAlphabetic(10));
-        return repository.save(bank);
+        return bankRepository.save(bank);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ControllerBankIntegrationTest {
         ResponseEntity<Bank> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, Bank.class);
 
         Bank responseBody = response.getBody();
-        Bank savedBank = repository.findByName(model.getName()).orElse(null);
+        Bank savedBank = bankRepository.findByName(model.getName()).orElse(null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(responseBody);

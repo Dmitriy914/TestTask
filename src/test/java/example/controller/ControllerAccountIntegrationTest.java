@@ -34,7 +34,7 @@ public class ControllerAccountIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private AccountRepository repository;
+    private AccountRepository accountRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -76,7 +76,7 @@ public class ControllerAccountIntegrationTest {
         ResponseEntity<Account> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", model, Account.class);
 
         Account responseBody = response.getBody();
-        Iterable<Account> savedAccount = repository.findByUserId(user.getId());
+        Iterable<Account> savedAccount = accountRepository.findByUserId(user.getId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(responseBody);

@@ -42,7 +42,7 @@ public class ControllerUserIntegrationTest {
     private AccountRepository accountRepository;
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Autowired
     private BankRepository bankRepository;
@@ -67,7 +67,7 @@ public class ControllerUserIntegrationTest {
         user.setAddress(RandomStringUtils.randomAlphabetic(10));
         user.setPhone(RandomStringUtils.randomAlphabetic(10));
         user.setPatronymic(RandomStringUtils.randomAlphabetic(10));
-        return repository.save(user);
+        return userRepository.save(user);
     }
 
     private Bank createAndSaveBankRandom(){
@@ -103,7 +103,7 @@ public class ControllerUserIntegrationTest {
         ResponseEntity<User> response = restTemplate.postForEntity("http://localhost:" + port + "/users", model, User.class);
 
         User responseBody = response.getBody();
-        User savedUser = repository.findByPhone(model.getPhone()).orElse(null);
+        User savedUser = userRepository.findByPhone(model.getPhone()).orElse(null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(responseBody);
