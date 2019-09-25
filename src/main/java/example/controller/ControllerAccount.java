@@ -29,7 +29,7 @@ public class ControllerAccount {
     }
 
     @PostMapping
-    public Account Add(@Valid @RequestBody AccountModel model){
+    public Account add(@Valid @RequestBody AccountModel model){
         User user = serviceUser.search(model.getUserIdOrPhone());
         Bank bank = serviceBank.search(model.getBankIdOrNameOrPhone());
 

@@ -17,12 +17,12 @@ public class ControllerBank {
     }
 
     @PostMapping
-    public Bank Add(@Valid @RequestBody BankModel model){
+    public Bank add(@Valid @RequestBody BankModel model){
         return service.add(model);
     }
 
     @GetMapping
-    public Iterable<Bank> Search() {
+    public Iterable<Bank> search() {
         return service.searchAll();
     }
 }

@@ -30,6 +30,9 @@ public class TransactionRepositoryIntegrationTest {
     @Autowired
     private BankRepository bankRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     private Bank createAndSaveBankRandom(){
         Bank bank = new Bank();
         bank.setName(RandomStringUtils.randomAlphabetic(10));
@@ -48,13 +51,13 @@ public class TransactionRepositoryIntegrationTest {
         return userRepository.save(user);
     }
 
-    private Account createAccountRandom(User user, Bank bank){
+    private Account createAndSaveAccountRandom(User user, Bank bank){
         Account account = new Account();
         account.setUser(user);
         account.setBank(bank);
         account.setAccountNumber(RandomStringUtils.randomNumeric(10));
         account.setBalance(BigDecimal.ZERO);
-        return account;
+        return accountRepository.save(account);
     }
 
     private Transaction createAndSaveTransaction(Account send, Account get, String amount, long millisec){
@@ -68,8 +71,8 @@ public class TransactionRepositoryIntegrationTest {
 
     @Test
     public void findByAccountSendAndAccountGetOrderByDateAsc(){
-        Account send = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
-        Account get = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account send = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account get = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
         Transaction transaction1 = createAndSaveTransaction(send, get, "12", 1L);
         Transaction transaction2 = createAndSaveTransaction(send, get, "21", 2L);
 
@@ -80,8 +83,8 @@ public class TransactionRepositoryIntegrationTest {
 
     @Test
     public void findByAccountSendAndAccountGetOrderByDateDesc(){
-        Account send = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
-        Account get = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account send = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account get = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
         Transaction transaction1 = createAndSaveTransaction(send, get, "12", 1L);
         Transaction transaction2 = createAndSaveTransaction(send, get, "21", 2L);
 
@@ -95,12 +98,12 @@ public class TransactionRepositoryIntegrationTest {
         User user = createAndSaveUserRandom();
 
         Transaction transaction1 = createAndSaveTransaction(
-                createAccountRandom(user, createAndSaveBankRandom()),
-                createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()),"12", 1L);
+                createAndSaveAccountRandom(user, createAndSaveBankRandom()),
+                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()),"12", 1L);
 
         Transaction transaction2 = createAndSaveTransaction(
-                createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()),
-                createAccountRandom(user, createAndSaveBankRandom()), "21", 2L);
+                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()),
+                createAndSaveAccountRandom(user, createAndSaveBankRandom()), "21", 2L);
 
         Iterable<Transaction> foundByUser = repository.findByUser(user.getId());
 
@@ -111,20 +114,20 @@ public class TransactionRepositoryIntegrationTest {
     public void findByUserAndBank(){
         User user = createAndSaveUserRandom();
         Bank bank = createAndSaveBankRandom();
-        Account account = createAccountRandom(user, bank);
+        Account account = createAndSaveAccountRandom(user, bank);
 
         Transaction transaction1 = createAndSaveTransaction(account,
-                createAccountRandom(createAndSaveUserRandom(), bank), "123", 1L);
+                createAndSaveAccountRandom(createAndSaveUserRandom(), bank), "123", 1L);
 
         Transaction transaction2 = createAndSaveTransaction(
-                createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()),
+                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()),
                 account, "132", 2L);
 
-        createAndSaveTransaction(createAccountRandom(user, createAndSaveBankRandom()),
-                createAccountRandom(createAndSaveUserRandom(), bank), "213", 3L);
+        createAndSaveTransaction(createAndSaveAccountRandom(user, createAndSaveBankRandom()),
+                createAndSaveAccountRandom(createAndSaveUserRandom(), bank), "213", 3L);
 
-        createAndSaveTransaction(createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()),
-                createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()), "231", 4L);
+        createAndSaveTransaction(createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()),
+                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()), "231", 4L);
 
         Iterable<Transaction> foundByUser = repository.findByUserAndBank(user.getId(), bank.getId());
 

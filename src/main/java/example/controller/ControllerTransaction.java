@@ -24,7 +24,7 @@ public class ControllerTransaction {
     }
 
     @PostMapping
-    public Transaction Add(@Valid @RequestBody TransactionModel model){
+    public Transaction add(@Valid @RequestBody TransactionModel model){
         Account send = serviceAccount.search(model.getAccountSendIdOrAccountNumber());
         Account get = serviceAccount.search(model.getAccountGetIdOrAccountNumber());
 
@@ -35,7 +35,7 @@ public class ControllerTransaction {
     }
 
     @GetMapping
-    public Iterable<Transaction> Search(@RequestParam String accountSendIdOrAccountNumber,
+    public Iterable<Transaction> search(@RequestParam String accountSendIdOrAccountNumber,
                                         @RequestParam String accountGetIdOrAccountNumber,
                                         @RequestParam String sortMode){
         validate(accountSendIdOrAccountNumber, accountGetIdOrAccountNumber, sortMode);

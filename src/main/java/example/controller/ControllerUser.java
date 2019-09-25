@@ -31,12 +31,12 @@ public class ControllerUser {
     }
 
     @PostMapping()
-    public User Add(@Valid @RequestBody UserModel model){
+    public User add(@Valid @RequestBody UserModel model){
         return serviceUser.add(model);
     }
 
     @GetMapping("/{idOrPhone}")
-    public User Search(@PathVariable("idOrPhone") String idOrPhone){
+    public User search(@PathVariable("idOrPhone") String idOrPhone){
         User user = serviceUser.search(idOrPhone);
 
         if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -45,20 +45,14 @@ public class ControllerUser {
     }
 
     @GetMapping("/{idOrPhone}/accounts")
-    public Iterable<Account> GetAccounts(@PathVariable("idOrPhone") String idOrPhone){
-        User user = serviceUser.search(idOrPhone);
-
-        if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-
-        return serviceAccount.getAccountsByUser(user);
+    public Iterable<Account> getAccounts(@PathVariable("idOrPhone") String idOrPhone){
+        return serviceAccount.getAccountsByUser(search(idOrPhone));
     }
 
     @GetMapping("/{idOrPhone}/transactions")
-    public Iterable<Transaction> GetTransaction(@PathVariable("idOrPhone") String userIdOrPhone,
+    public Iterable<Transaction> getTransaction(@PathVariable("idOrPhone") String userIdOrPhone,
                                                 @RequestParam(defaultValue = "none") String bankIdOrNameOrPhone){
-        User user = serviceUser.search(userIdOrPhone);
-
-        if(user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        User user = search(userIdOrPhone);
 
         if(bankIdOrNameOrPhone.equals("none")) return serviceTransaction.getTransaction(user);
 
