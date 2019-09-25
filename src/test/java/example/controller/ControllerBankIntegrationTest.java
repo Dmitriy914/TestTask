@@ -33,7 +33,7 @@ public class ControllerBankIntegrationTest {
     private BankRepository repository;
 
     @Before
-    public void initialization(){
+    public void clean(){
         repository.deleteAll();
     }
 
@@ -45,7 +45,7 @@ public class ControllerBankIntegrationTest {
         return model;
     }
 
-    private Bank createBankRandom(){
+    private Bank createAndSaveBankRandom(){
         Bank bank = new Bank();
         bank.setName(RandomStringUtils.randomAlphabetic(10));
         bank.setAddress(RandomStringUtils.randomAlphabetic(10));
@@ -60,11 +60,11 @@ public class ControllerBankIntegrationTest {
         ResponseEntity<Bank> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", model, Bank.class);
 
         Bank responseBody = response.getBody();
-        Bank saveBank = repository.findByName(model.getName()).orElse(null);
+        Bank savedBank = repository.findByName(model.getName()).orElse(null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(responseBody);
-        assertEquals(saveBank, responseBody);
+        assertEquals(savedBank, responseBody);
     }
 
     @Test
@@ -73,6 +73,7 @@ public class ControllerBankIntegrationTest {
         errorModel.setName("");
 
         ResponseEntity<String[]> response = restTemplate.postForEntity("http://localhost:" + port + "/banks", errorModel, String[].class);
+
         String[] responseBody = response.getBody();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -81,8 +82,8 @@ public class ControllerBankIntegrationTest {
 
     @Test
     public void searchAll(){
-        Bank bank1 = createBankRandom();
-        Bank bank2 = createBankRandom();
+        Bank bank1 = createAndSaveBankRandom();
+        Bank bank2 = createAndSaveBankRandom();
 
         Bank[] banks = restTemplate.getForObject("http://localhost:" + port + "/banks", Bank[].class);
 

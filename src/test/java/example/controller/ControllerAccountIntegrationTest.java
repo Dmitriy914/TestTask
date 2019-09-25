@@ -18,8 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import java.util.HashMap;
 
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -41,7 +42,7 @@ public class ControllerAccountIntegrationTest {
     @Autowired
     private BankRepository bankRepository;
 
-    private User createUserRandom(){
+    private User createAndSaveUserRandom(){
         User user = new User();
         user.setSurname(RandomStringUtils.randomAlphabetic(10));
         user.setPhone(RandomStringUtils.randomAlphabetic(10));
@@ -51,7 +52,7 @@ public class ControllerAccountIntegrationTest {
         return userRepository.save(user);
     }
 
-    private Bank createBankRandom(){
+    private Bank createAndSaveBankRandom(){
         Bank bank = new Bank();
         bank.setName(RandomStringUtils.randomAlphabetic(10));
         bank.setAddress(RandomStringUtils.randomAlphabetic(10));
@@ -68,22 +69,41 @@ public class ControllerAccountIntegrationTest {
 
     @Test
     public void saveAccountWithStatusOk(){
-        User user = createUserRandom();
-        Bank bank = createBankRandom();
+        User user = createAndSaveUserRandom();
+        Bank bank = createAndSaveBankRandom();
         AccountModel model = createAccountModelRandom(user.getPhone(), bank.getPhone());
 
         ResponseEntity<Account> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", model, Account.class);
 
         Account responseBody = response.getBody();
-        Iterable<Account> saveAccount = repository.findByUserId(user.getId());
+        Iterable<Account> savedAccount = repository.findByUserId(user.getId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(responseBody);
-        assertThat(saveAccount, contains(responseBody));
+        assertThat(savedAccount, contains(responseBody));
     }
 
     @Test
     public void errorSaveAccountWithStatusBadRequest(){
+        AccountModel errorModel = createAccountModelRandom("userId", "");
 
+        ResponseEntity<String[]> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", errorModel, String[].class);
+
+        String[] responseBody = response.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertThat(responseBody, arrayContainingInAnyOrder("Field (bankIdOrNameOrPhone) should not be empty"));
+    }
+
+    @Test
+    public void errorSaveAccountWithStatusNotFound(){
+        User user = createAndSaveUserRandom();
+        AccountModel model = createAccountModelRandom(user.getPhone(), "10");
+
+        ResponseEntity<HashMap> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", model, HashMap.class);
+
+        System.out.println(response.getBody());
+        assertEquals(404, response.getBody().get("status"));
+        assertEquals("Bank not found", response.getBody().get("message"));
     }
 }

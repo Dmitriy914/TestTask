@@ -49,10 +49,6 @@ public class ServiceAccount {
         else return res;
     }
 
-    private int randomInt(int max, int min){
-        return (int) (Math.random()*(max - min + 1)) + min;
-    }
-
     private boolean checkNumeric(String s){
         try{
             Integer.parseInt(s);

@@ -13,6 +13,7 @@ import org.mockito.ArgumentMatchers;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class ServiceAccountTest {
@@ -31,12 +32,12 @@ public class ServiceAccountTest {
         User user = new User();
         Bank bank = new Bank();
         when(repositoryMock.existsByUserAndBank(user, bank)).thenReturn(false);
-        when(repositoryMock.existsByAccountNumber(ArgumentMatchers.anyString())).thenReturn(false);
+        when(repositoryMock.existsByAccountNumber(anyString())).thenReturn(false);
 
         service.add(user, bank);
 
         verify(repositoryMock).existsByUserAndBank(user, bank);
-        verify(repositoryMock).existsByAccountNumber(ArgumentMatchers.anyString());
+        verify(repositoryMock).existsByAccountNumber(anyString());
         verify(repositoryMock).save(any(Account.class));
         verifyNoMoreInteractions(repositoryMock);
     }
