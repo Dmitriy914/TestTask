@@ -28,8 +28,8 @@ public class ControllerTransaction {
         Account send = serviceAccount.search(model.getAccountSendIdOrAccountNumber());
         Account get = serviceAccount.search(model.getAccountGetIdOrAccountNumber());
 
-        if(get == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account get not found");
         if(send == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account send not found");
+        if(get == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account get not found");
 
         return serviceTransaction.add(send, get, model.getAmount());
     }
@@ -43,8 +43,8 @@ public class ControllerTransaction {
         Account get = serviceAccount.search(accountGetIdOrAccountNumber);
         Account send = serviceAccount.search(accountSendIdOrAccountNumber);
 
-        if(get == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account get not found");
         if(send == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account send not found");
+        if(get == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account get not found");
 
         return serviceTransaction.search(send, get, sortMode);
     }

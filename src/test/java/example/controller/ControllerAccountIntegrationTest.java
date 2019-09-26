@@ -49,8 +49,7 @@ public class ControllerAccountIntegrationTest extends SuperControllerTest{
 
         ResponseEntity<HashMap> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", model, HashMap.class);
 
-        System.out.println(response.getBody());
-        assertEquals(404, response.getBody().get("status"));
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("Bank not found", response.getBody().get("message"));
     }
 }

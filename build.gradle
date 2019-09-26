@@ -32,6 +32,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.13.2'
+
 
     testCompile("junit:junit")
     testCompile("org.springframework.boot:spring-boot-starter-test")

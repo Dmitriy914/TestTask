@@ -60,7 +60,7 @@ public class ControllerUserIntegrationTest extends SuperControllerTest{
         ResponseEntity<HashMap> response = restTemplate.getForEntity("http://localhost:" + port + "/users/{id}", HashMap.class, 100);
 
         System.out.println(response.getBody());
-        assertEquals(404, response.getBody().get("status"));
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("User not found", response.getBody().get("message"));
     }
 
