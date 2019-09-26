@@ -75,4 +75,20 @@ public class TransactionRepositoryIntegrationTest extends SuperRepositoryTest{
 
         assertThat(foundByUser, containsInAnyOrder(transaction1, transaction2));
     }
+
+    @Test
+    public void test(){
+        User user = createAndSaveUserRandom();
+        Transaction transaction = createAndSaveTransaction(
+                createAndSaveAccountRandom(user, createAndSaveBankRandom()),
+                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()), "12", 1L);
+
+        Iterable<Transaction> foundByUser = transactionRepository.findByUser(user.getId());
+
+        System.out.println(transaction);
+        System.out.println(foundByUser.iterator().next());
+
+        System.out.println("Дата в объекте при сохранении:" + transaction.getDate());
+        System.out.println("Дата в объекте при поиске    :" + foundByUser.iterator().next().getDate());
+    }
 }

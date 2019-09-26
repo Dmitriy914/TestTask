@@ -19,26 +19,32 @@ public class ControllerTransactionIntegrationTest extends SuperControllerTest{
         User user = createAndSaveUserRandom();
         TransactionModel model = createTransactionModel(
                 createAndSaveAccountRandom(user, createAndSaveBankRandom()),
-                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()), "12.00");
+                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()), "12");
 
-        //ResponseEntity<Transaction> response = restTemplate.postForEntity("http://localhost:" + port + "/transactions", model, Transaction.class);
+        ResponseEntity<Transaction> response = restTemplate.postForEntity("http://localhost:" + port + "/transactions", model, Transaction.class);
 
-        //ResponseEntity<HashMap> response = restTemplate.postForEntity("http://localhost:" + port + "/transactions", model, HashMap.class);
-        //System.out.println(response.getBody());
-
-        //Transaction responseBody = response.getBody();
-        Transaction responseBody = createAndSaveTransaction(
-                createAndSaveAccountRandom(user, createAndSaveBankRandom()),
-                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()), "12.00", 1L);
+        Transaction responseBody = response.getBody();
         
         Iterable<Transaction> savedTransaction = transactionRepository.findByUser(user.getId());
 
-        System.out.println("Дата в объекте из репозитория: " + savedTransaction.iterator().next().getDate());
-        System.out.println("Дата в объекте из API:         " + responseBody.getDate());
-        System.out.println("Equals: " + savedTransaction.iterator().next().equals(responseBody));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(responseBody);
+        assertThat(savedTransaction, contains(responseBody));
+    }
 
-        //assertEquals(HttpStatus.OK, response.getStatusCode());
-        //assertNotNull(responseBody);
-        //assertThat(savedTransaction, contains(responseBody));
+    @Test
+    public void test(){
+        User user = createAndSaveUserRandom();
+        Transaction transaction = createAndSaveTransaction(
+                createAndSaveAccountRandom(user, createAndSaveBankRandom()),
+                createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom()), "12", 1L);
+
+        Iterable<Transaction> foundByUser = transactionRepository.findByUser(user.getId());
+
+        System.out.println(transaction);
+        System.out.println(foundByUser.iterator().next());
+
+        System.out.println("Дата в объекте при сохранении:" + transaction.getDate());
+        System.out.println("Дата в объекте при поиске    :" + foundByUser.iterator().next().getDate());
     }
 }

@@ -13,45 +13,47 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class SuperRepositoryTest {
     @Autowired
-    protected AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @Autowired
-    protected UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
-    protected BankRepository bankRepository;
+    BankRepository bankRepository;
 
     @Autowired
-    protected TransactionRepository transactionRepository;
-
-    Bank createAndSaveBankRandom(){
-        Bank bank = new Bank();
-        bank.setName(RandomStringUtils.randomAlphabetic(10));
-        bank.setAddress(RandomStringUtils.randomAlphabetic(10));
-        bank.setPhone(RandomStringUtils.randomAlphabetic(10));
-        return bankRepository.save(bank);
-    }
+    TransactionRepository transactionRepository;
 
     User createAndSaveUserRandom(){
         User user = new User();
-        user.setAddress(RandomStringUtils.randomAlphabetic(10));
-        user.setName(RandomStringUtils.randomAlphabetic(10));
-        user.setSurname(RandomStringUtils.randomAlphabetic(10));
-        user.setPatronymic(RandomStringUtils.randomAlphabetic(10));
-        user.setPhone(RandomStringUtils.randomAlphabetic(10));
+        user.setSurname(randomAlphabetic(10));
+        user.setPhone(randomAlphabetic(10));
+        user.setAddress(randomAlphabetic(10));
+        user.setName(randomAlphabetic(10));
+        user.setPatronymic(randomAlphabetic(10));
         return userRepository.save(user);
+    }
+
+    Bank createAndSaveBankRandom(){
+        Bank bank = new Bank();
+        bank.setName(randomAlphabetic(10));
+        bank.setAddress(randomAlphabetic(10));
+        bank.setPhone(randomAlphabetic(10));
+        return bankRepository.save(bank);
     }
 
     Account createAndSaveAccountRandom(User user, Bank bank){
         Account account = new Account();
         account.setUser(user);
         account.setBank(bank);
+        account.setBalance(new BigDecimal("100.00"));
         account.setAccountNumber(RandomStringUtils.randomNumeric(10));
-        account.setBalance(BigDecimal.ZERO);
         return accountRepository.save(account);
     }
 

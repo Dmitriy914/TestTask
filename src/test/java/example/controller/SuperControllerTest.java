@@ -23,45 +23,47 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = "test")
 public class SuperControllerTest {
     @LocalServerPort
-    protected int port;
+    int port;
 
     @Autowired
-    protected TestRestTemplate restTemplate;
+    TestRestTemplate restTemplate;
 
     @Autowired
-    protected AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @Autowired
-    protected UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
-    protected BankRepository bankRepository;
+    BankRepository bankRepository;
 
     @Autowired
-    protected TransactionRepository transactionRepository;
+    TransactionRepository transactionRepository;
 
 
 
     UserModel createUserModelRandom(){
         UserModel model = new UserModel();
-        model.setName(RandomStringUtils.randomAlphabetic(10));
-        model.setPhone(RandomStringUtils.randomAlphabetic(10));
-        model.setAddress(RandomStringUtils.randomAlphabetic(10));
-        model.setPatronymic(RandomStringUtils.randomAlphabetic(10));
-        model.setSurname(RandomStringUtils.randomAlphabetic(10));
+        model.setName(randomAlphabetic(10));
+        model.setPhone(randomAlphabetic(10));
+        model.setAddress(randomAlphabetic(10));
+        model.setPatronymic(randomAlphabetic(10));
+        model.setSurname(randomAlphabetic(10));
         return model;
     }
 
     BankModel createBankModelRandom(){
         BankModel model = new BankModel();
-        model.setName(RandomStringUtils.randomAlphabetic(10));
-        model.setAddress(RandomStringUtils.randomAlphabetic(10));
-        model.setPhone(RandomStringUtils.randomAlphabetic(10));
+        model.setName(randomAlphabetic(10));
+        model.setAddress(randomAlphabetic(10));
+        model.setPhone(randomAlphabetic(10));
         return model;
     }
 
@@ -73,19 +75,19 @@ public class SuperControllerTest {
 
     User createAndSaveUserRandom(){
         User user = new User();
-        user.setSurname(RandomStringUtils.randomAlphabetic(10));
-        user.setPhone(RandomStringUtils.randomAlphabetic(10));
-        user.setAddress(RandomStringUtils.randomAlphabetic(10));
-        user.setName(RandomStringUtils.randomAlphabetic(10));
-        user.setPatronymic(RandomStringUtils.randomAlphabetic(10));
+        user.setSurname(randomAlphabetic(10));
+        user.setPhone(randomAlphabetic(10));
+        user.setAddress(randomAlphabetic(10));
+        user.setName(randomAlphabetic(10));
+        user.setPatronymic(randomAlphabetic(10));
         return userRepository.save(user);
     }
 
     Bank createAndSaveBankRandom(){
         Bank bank = new Bank();
-        bank.setName(RandomStringUtils.randomAlphabetic(10));
-        bank.setAddress(RandomStringUtils.randomAlphabetic(10));
-        bank.setPhone(RandomStringUtils.randomAlphabetic(10));
+        bank.setName(randomAlphabetic(10));
+        bank.setAddress(randomAlphabetic(10));
+        bank.setPhone(randomAlphabetic(10));
         return bankRepository.save(bank);
     }
 
@@ -94,7 +96,7 @@ public class SuperControllerTest {
         account.setUser(user);
         account.setBank(bank);
         account.setBalance(new BigDecimal("100.00"));
-        account.setAccountNumber(RandomStringUtils.randomAlphabetic(10));
+        account.setAccountNumber(RandomStringUtils.randomNumeric(10));
         return accountRepository.save(account);
     }
 
