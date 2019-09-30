@@ -2,7 +2,6 @@ package example.controller;
 
 import example.entity.Bank;
 import example.model.BankModel;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.junit.Assert.*;
 
-public class ControllerBankIntegrationTest extends SuperControllerTest{
+public class ControllerBankIntegrationTest extends ControllerTest{
 
     @Test
     public void saveBankWithStatusOk(){

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.junit.Assert.*;
 
-public class ControllerUserIntegrationTest extends SuperControllerTest{
+public class ControllerUserIntegrationTest extends ControllerTest{
 
     @Test
     public void saveUserWithStatusOk(){

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class BankRepositoryIntegrationTest extends SuperRepositoryTest{
+public class BankRepositoryIntegrationTest extends RepositoryTest{
     @Test
     public void findByName(){
         Bank bank = createAndSaveBankRandom();

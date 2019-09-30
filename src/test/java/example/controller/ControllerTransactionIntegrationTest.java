@@ -16,7 +16,7 @@ import java.util.HashMap;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.junit.Assert.*;
 
-public class ControllerTransactionIntegrationTest extends SuperControllerTest{
+public class ControllerTransactionIntegrationTest extends ControllerTest{
 
     @Test
     public void saveTransactionWithStatusOk(){

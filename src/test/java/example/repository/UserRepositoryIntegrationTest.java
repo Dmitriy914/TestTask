@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class UserRepositoryIntegrationTest extends SuperRepositoryTest{
+public class UserRepositoryIntegrationTest extends RepositoryTest{
     @Test
     public void findByPhone(){
         User user = createAndSaveUserRandom();

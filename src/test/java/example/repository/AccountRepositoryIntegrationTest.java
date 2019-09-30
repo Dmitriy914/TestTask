@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
 
-public class AccountRepositoryIntegrationTest extends SuperRepositoryTest{
+public class AccountRepositoryIntegrationTest extends RepositoryTest{
     @Test
     public void findByUserId(){
         User user = createAndSaveUserRandom();

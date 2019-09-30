@@ -28,7 +28,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = "test")
-public class SuperControllerTest {
+public abstract class ControllerTest {
     @LocalServerPort
     int port;
 

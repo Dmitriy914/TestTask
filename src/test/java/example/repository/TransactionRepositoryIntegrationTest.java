@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
-public class TransactionRepositoryIntegrationTest extends SuperRepositoryTest{
+public class TransactionRepositoryIntegrationTest extends RepositoryTest{
     @Test
     public void findByAccountSendAndAccountGetOrderByDateAsc(){
         Account send = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
