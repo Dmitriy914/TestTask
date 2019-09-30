@@ -40,6 +40,7 @@ public class ControllerBankIntegrationTest extends ControllerTest{
 
     @Test
     public void searchAll(){
+        accountRepository.deleteAll();
         bankRepository.deleteAll();
         Bank bank1 = createAndSaveBankRandom();
         Bank bank2 = createAndSaveBankRandom();

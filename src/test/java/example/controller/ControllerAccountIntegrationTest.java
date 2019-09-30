@@ -13,7 +13,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 public class ControllerAccountIntegrationTest extends ControllerTest{
-
     @Test
     public void saveAccountWithStatusOk(){
         User user = createAndSaveUserRandom();
