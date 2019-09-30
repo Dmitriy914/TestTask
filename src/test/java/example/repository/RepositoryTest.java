@@ -17,7 +17,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class SuperRepositoryTest {
+public abstract class RepositoryTest {
     @Autowired
     AccountRepository accountRepository;
 
