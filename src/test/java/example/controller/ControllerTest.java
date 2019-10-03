@@ -105,7 +105,7 @@ public abstract class ControllerTest {
         transaction.setAccountSend(send);
         transaction.setAccountGet(get);
         transaction.setAmount(new BigDecimal(amount));
-        transaction.setDate(new Date(millisec));
+        //transaction.setDate(new Date(millisec));
         return transactionRepository.save(transaction);
     }
 }

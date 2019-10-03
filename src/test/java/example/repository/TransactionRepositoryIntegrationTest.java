@@ -13,24 +13,24 @@ import static org.junit.Assert.assertThat;
 public class TransactionRepositoryIntegrationTest extends RepositoryTest{
     @Test
     public void findByAccountSendAndAccountGetOrderByDateAsc(){
-        Account send = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
-        Account get = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account send = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account get = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
         Transaction transaction1 = createAndSaveTransaction(send, get, "12", 1L);
         Transaction transaction2 = createAndSaveTransaction(send, get, "21", 2L);
 
-        Iterable<Transaction> foundTransactionOrderByDateAsc = transactionRepository.findByAccountSendAndAccountGetOrderByDateAsc(send, get);
+        Iterable<Transaction> foundTransactionOrderByDateAsc = transactionRepository.findByAccountSendAndAccountGetOrderByInstantAsc(send, get);
 
         assertThat(foundTransactionOrderByDateAsc, contains(transaction1, transaction2));
     }
 
     @Test
     public void findByAccountSendAndAccountGetOrderByDateDesc(){
-        Account send = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
-        Account get = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account send = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account get = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
         Transaction transaction1 = createAndSaveTransaction(send, get, "12", 1L);
         Transaction transaction2 = createAndSaveTransaction(send, get, "21", 2L);
 
-        Iterable<Transaction> foundTransactionOrderByDateDesc = transactionRepository.findByAccountSendAndAccountGetOrderByDateDesc(send, get);
+        Iterable<Transaction> foundTransactionOrderByDateDesc = transactionRepository.findByAccountSendAndAccountGetOrderByInstantDesc(send, get);
 
         assertThat(foundTransactionOrderByDateDesc, contains(transaction2, transaction1));
     }
@@ -88,7 +88,7 @@ public class TransactionRepositoryIntegrationTest extends RepositoryTest{
         System.out.println(transaction);
         System.out.println(foundByUser.iterator().next());
 
-        System.out.println("Дата в объекте при сохранении:" + transaction.getDate());
-        System.out.println("Дата в объекте при поиске    :" + foundByUser.iterator().next().getDate());
+        System.out.println("Дата в объекте при сохранении:" + transaction.getInstant());
+        System.out.println("Дата в объекте при поиске    :" + foundByUser.iterator().next().getInstant());
     }
 }

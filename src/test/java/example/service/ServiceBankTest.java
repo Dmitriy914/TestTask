@@ -2,95 +2,85 @@ package example.service;
 
 import example.entity.Bank;
 import example.exception.DuplicateException;
-import example.model.BankModel;
-import example.repository.BankRepository;
-import org.junit.Before;
+import example.exception.NotFoundException;
 import org.junit.Test;
 
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class ServiceBankTest {
-    private BankRepository repositoryMock;
-
-    private ServiceBank service;
-
-    @Before
-    public void initialization(){
-        repositoryMock = mock(BankRepository.class);
-        service = new ServiceBank(repositoryMock);
-    }
-
+public class ServiceBankTest extends ServiceTest{
     @Test
     public void addNotExistingBank() {
-        BankModel model = new BankModel();
-        model.setName("name");
-        model.setPhone("phone");
-        when(repositoryMock.existsByName("name")).thenReturn(false);
-        when(repositoryMock.existsByPhone("phone")).thenReturn(false);
+        when(bankRepositoryMock.existsByName("name")).thenReturn(false);
+        when(bankRepositoryMock.existsByPhone("phone")).thenReturn(false);
 
-        service.add(model);
-        verify(repositoryMock).existsByName("name");
-        verify(repositoryMock).existsByPhone("phone");
-        verify(repositoryMock).save(any(Bank.class));
-        verifyNoMoreInteractions(repositoryMock);
+        serviceBank.add("name", "address", "phone");
+        verify(bankRepositoryMock).existsByName("name");
+        verify(bankRepositoryMock).existsByPhone("phone");
+        verify(bankRepositoryMock).save(any(Bank.class));
+        verifyNoMoreInteractions(bankRepositoryMock);
     }
 
     @Test(expected = DuplicateException.class)
     public void addBankWithExistingName(){
-        BankModel model = new BankModel();
-        model.setName("name");
-        when(repositoryMock.existsByName("name")).thenReturn(true);
+        when(bankRepositoryMock.existsByName("name")).thenReturn(true);
 
-        service.add(model);
+        serviceBank.add("name", "address", "phone");
     }
 
     @Test(expected = DuplicateException.class)
     public void addBankWithExistingPhone(){
-        BankModel model = new BankModel();
-        model.setName("name");
-        model.setPhone("phone");
-        when(repositoryMock.existsByName("name")).thenReturn(false);
-        when(repositoryMock.existsByPhone("phone")).thenReturn(true);
+        when(bankRepositoryMock.existsByName("name")).thenReturn(false);
+        when(bankRepositoryMock.existsByPhone("phone")).thenReturn(true);
 
-        service.add(model);
+        serviceBank.add("name", "address", "phone");
     }
 
     @Test
     public void searchAll() {
-        service.searchAll();
+        serviceBank.searchAll();
 
-        verify(repositoryMock).findAll();
-        verifyNoMoreInteractions(repositoryMock);
+        verify(bankRepositoryMock).findAll();
+        verifyNoMoreInteractions(bankRepositoryMock);
     }
 
     @Test
     public void searchById() {
-        service.search("12");
+        when(bankRepositoryMock.findById(12)).thenReturn(Optional.of(new Bank()));
+        serviceBank.search("12");
 
-        verify(repositoryMock).findById(12);
-        verifyNoMoreInteractions(repositoryMock);
+        verify(bankRepositoryMock).findById(12);
+        verifyNoMoreInteractions(bankRepositoryMock);
     }
 
     @Test
     public void searchByName(){
-        when(repositoryMock.findByName("name")).thenReturn(Optional.of(new Bank()));
+        when(bankRepositoryMock.findByName("name")).thenReturn(Optional.of(new Bank()));
 
-        service.search("name");
+        serviceBank.search("name");
 
-        verify(repositoryMock).findByName("name");
-        verifyNoMoreInteractions(repositoryMock);
+        verify(bankRepositoryMock).findByName("name");
+        verifyNoMoreInteractions(bankRepositoryMock);
     }
 
     @Test
     public void searchByPhone(){
-        when(repositoryMock.findByName("phone")).thenReturn(Optional.empty());
+        when(bankRepositoryMock.findByName("phone")).thenReturn(Optional.empty());
+        when(bankRepositoryMock.findByPhone("phone")).thenReturn(Optional.of(new Bank()));
 
-        service.search("phone");
+        serviceBank.search("phone");
 
-        verify(repositoryMock).findByName("phone");
-        verify(repositoryMock).findByPhone("phone");
-        verifyNoMoreInteractions(repositoryMock);
+        verify(bankRepositoryMock).findByName("phone");
+        verify(bankRepositoryMock).findByPhone("phone");
+        verifyNoMoreInteractions(bankRepositoryMock);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void errorSearch(){
+        when(bankRepositoryMock.findByName("phone")).thenReturn(Optional.empty());
+        when(bankRepositoryMock.findByPhone("phone")).thenReturn(Optional.empty());
+
+        serviceBank.search("phone");
     }
 }

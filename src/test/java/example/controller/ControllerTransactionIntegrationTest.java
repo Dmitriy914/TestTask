@@ -144,7 +144,7 @@ public class ControllerTransactionIntegrationTest extends ControllerTest{
         System.out.println(transaction);
         System.out.println(foundByUser.iterator().next());
 
-        System.out.println("Дата в объекте при сохранении:" + transaction.getDate());
-        System.out.println("Дата в объекте при поиске    :" + foundByUser.iterator().next().getDate());
+        //System.out.println("Дата в объекте при сохранении:" + transaction.getDate());
+        //System.out.println("Дата в объекте при поиске    :" + foundByUser.iterator().next().getDate());
     }
 }

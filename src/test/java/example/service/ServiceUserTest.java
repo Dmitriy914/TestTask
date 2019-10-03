@@ -2,58 +2,55 @@ package example.service;
 
 import example.entity.User;
 import example.exception.DuplicateException;
-import example.model.UserModel;
-import example.repository.UserRepository;
-import org.junit.Before;
+import example.exception.NotFoundException;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class ServiceUserTest {
-    private UserRepository repositoryMock;
-
-    private ServiceUser service;
-
-    @Before
-    public void initialization(){
-        repositoryMock = mock(UserRepository.class);
-        service = new ServiceUser(repositoryMock);
-    }
-
+public class ServiceUserTest extends ServiceTest{
     @Test
     public void addNotExistingUser(){
-        UserModel model = new UserModel();
-        model.setPhone("phone");
-        when(repositoryMock.existsByPhone("phone")).thenReturn(false);
+        when(userRepositoryMock.existsByPhone("phone")).thenReturn(false);
 
-        service.add(model);
-        verify(repositoryMock).existsByPhone("phone");
-        verify(repositoryMock).save(any(User.class));
-        verifyNoMoreInteractions(repositoryMock);
+        serviceUser.add("surname", "name", "patronymic", "address", "phone");
+        verify(userRepositoryMock).existsByPhone("phone");
+        verify(userRepositoryMock).save(any(User.class));
+        verifyNoMoreInteractions(userRepositoryMock);
     }
 
     @Test(expected = DuplicateException.class)
     public void addUserWithExistingPhone(){
-        UserModel model = new UserModel();
-        model.setPhone("phone");
-        when(repositoryMock.existsByPhone("phone")).thenReturn(true);
+        when(userRepositoryMock.existsByPhone("phone")).thenReturn(true);
 
-        service.add(model);
+        serviceUser.add("surname", "name", "patronymic", "address", "phone");
     }
 
     @Test
     public void searchById(){
-        service.search("12");
+        when(userRepositoryMock.findById(12)).thenReturn(Optional.of(new User()));
 
-        verify(repositoryMock).findById(12);
-        verifyNoMoreInteractions(repositoryMock);
+        serviceUser.search("12");
+
+        verify(userRepositoryMock).findById(12);
+        verifyNoMoreInteractions(userRepositoryMock);
     }
 
     @Test
     public void searchByPhone(){
-        service.search("phone");
+        when(userRepositoryMock.findByPhone("phone")).thenReturn(Optional.of(new User()));
 
-        verify(repositoryMock).findByPhone("phone");
-        verifyNoMoreInteractions(repositoryMock);
+        serviceUser.search("phone");
+
+        verify(userRepositoryMock).findByPhone("phone");
+        verifyNoMoreInteractions(userRepositoryMock);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void errorSearch(){
+        when(userRepositoryMock.findById(12)).thenReturn(Optional.empty());
+
+        serviceUser.search("12");
     }
 }

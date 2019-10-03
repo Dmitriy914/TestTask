@@ -17,10 +17,10 @@ public class Transaction {
     @GeneratedValue(strategy= GenerationType.AUTO, generator = "transaction_generator")
     private Integer id;
 
-    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Account accountSend;
 
-    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Account accountGet;
 
     @NotNull

@@ -1,11 +1,7 @@
 package example.service;
 
 import example.entity.Account;
-import example.entity.Bank;
-import example.entity.User;
 import example.exception.DuplicateException;
-import example.repository.AccountRepository;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -13,70 +9,58 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class ServiceAccountTest {
-    private AccountRepository repositoryMock;
-
-    private ServiceAccount service;
-
-    @Before
-    public void initialization(){
-        repositoryMock = mock(AccountRepository.class);
-        service = new ServiceAccount(repositoryMock, serviceUser, serviceBank);
-    }
-
+public class ServiceAccountTest extends ServiceTest{
     @Test
     public void addNotExistingAccount() {
-        User user = new User();
-        Bank bank = new Bank();
-        when(repositoryMock.existsByUserAndBank(user, bank)).thenReturn(false);
-        when(repositoryMock.existsByAccountNumber(anyString())).thenReturn(false);
+        when(accountRepositoryMock.existsByUserAndBank(null, null)).thenReturn(false);
+        when(accountRepositoryMock.existsByAccountNumber(anyString())).thenReturn(false);
 
-        service.add(user, bank);
+        serviceAccount.add("1", "2");
 
-        verify(repositoryMock).existsByUserAndBank(user, bank);
-        verify(repositoryMock).existsByAccountNumber(anyString());
-        verify(repositoryMock).save(any(Account.class));
-        verifyNoMoreInteractions(repositoryMock);
+        verify(accountRepositoryMock).existsByUserAndBank(null, null);
+        verify(accountRepositoryMock).existsByAccountNumber(anyString());
+        verify(accountRepositoryMock).save(any(Account.class));
+        verifyNoMoreInteractions(accountRepositoryMock);
+        verify(serviceUserMock).search("1");
+        verify(serviceBankMock).search("2");
     }
 
     @Test(expected = DuplicateException.class)
     public void addExistingAccount(){
-        User user = new User();
-        Bank bank = new Bank();
-        when(repositoryMock.existsByUserAndBank(user, bank)).thenReturn(true);
+        when(accountRepositoryMock.existsByUserAndBank(null, null)).thenReturn(true);
 
-        service.add(user, bank);
+        serviceAccount.add("1", "2");
     }
 
     @Test
     public void searchById() {
-        when(repositoryMock.findById(12)).thenReturn(Optional.of(new Account()));
+        when(accountRepositoryMock.findById(12)).thenReturn(Optional.of(new Account()));
 
-        service.search("12");
+        serviceAccount.search("12");
 
-        verify(repositoryMock).findById(12);
-        verifyNoMoreInteractions(repositoryMock);
+        verify(accountRepositoryMock).findById(12);
+        verifyNoMoreInteractions(accountRepositoryMock);
     }
 
     @Test
     public void searchByAccountNumber(){
-        when(repositoryMock.findById(123)).thenReturn(Optional.empty());
+        when(accountRepositoryMock.findById(123)).thenReturn(Optional.empty());
 
-        service.search("123");
+        serviceAccount.search("123");
 
-        verify(repositoryMock).findById(123);
-        verify(repositoryMock).findByAccountNumber("123");
-        verifyNoMoreInteractions(repositoryMock);
+        verify(accountRepositoryMock).findById(123);
+        verify(accountRepositoryMock).findByAccountNumber("123");
+        verifyNoMoreInteractions(accountRepositoryMock);
     }
 
     @Test
     public void getAccountsByUser() {
-        User user = new User();
-        user.setId(12);
+        when(serviceUserMock.search("12")).thenReturn(createUserWithId(12));
 
-        service.getAccountsByUser(user);
+        serviceAccount.getAccountsByUser("12");
 
-        verify(repositoryMock).findByUserId(12);
-        verifyNoMoreInteractions(repositoryMock);
+        verify(accountRepositoryMock).findByUserId(12);
+        verifyNoMoreInteractions(accountRepositoryMock);
+        verify(serviceUserMock).search("12");
     }
 }
