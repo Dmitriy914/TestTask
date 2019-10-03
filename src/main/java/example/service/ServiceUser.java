@@ -3,7 +3,6 @@ package example.service;
 import example.entity.User;
 import example.exception.DuplicateException;
 import example.exception.NotFoundException;
-import example.model.UserModel;
 import example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +16,16 @@ public class ServiceUser {
     }
 
     @Transactional
-    public User add(UserModel model){
-        if(repository.existsByPhone(model.getPhone())){
+    public User add(String surname, String name, String patronymic, String address, String phone){
+        if(repository.existsByPhone(phone)){
             throw new DuplicateException("phone");
         }
         User user = new User();
-        user.setAddress(model.getAddress());
-        user.setName(model.getName());
-        user.setSurname(model.getSurname());
-        user.setPatronymic(model.getPatronymic());
-        user.setPhone(model.getPhone());
+        user.setAddress(address);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setPatronymic(patronymic);
+        user.setPhone(phone);
         return repository.save(user);
     }
 

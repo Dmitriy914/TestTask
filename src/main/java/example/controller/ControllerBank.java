@@ -18,7 +18,7 @@ public class ControllerBank {
 
     @PostMapping
     public Bank add(@Valid @RequestBody BankModel model){
-        return service.add(model);
+        return service.add(model.getName(), model.getAddress(), model.getPhone());
     }
 
     @GetMapping

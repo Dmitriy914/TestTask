@@ -2,7 +2,6 @@ package example.service;
 
 import example.entity.Bank;
 import example.exception.NotFoundException;
-import example.model.BankModel;
 import example.repository.BankRepository;
 import example.exception.DuplicateException;
 import org.springframework.stereotype.Service;
@@ -17,17 +16,17 @@ public class ServiceBank {
     }
 
     @Transactional
-    public Bank add(BankModel model){
-        if(repository.existsByName(model.getName())) {
+    public Bank add(String name, String address, String phone){
+        if(repository.existsByName(name)) {
             throw new DuplicateException("name");
         }
-        if(repository.existsByPhone(model.getPhone())) {
+        if(repository.existsByPhone(phone)) {
             throw new DuplicateException("phone");
         }
         Bank bank = new Bank();
-        bank.setName(model.getName());
-        bank.setAddress(model.getAddress());
-        bank.setPhone(model.getPhone());
+        bank.setName(name);
+        bank.setAddress(address);
+        bank.setPhone(phone);
         return repository.save(bank);
     }
 

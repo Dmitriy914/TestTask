@@ -25,7 +25,7 @@ public class ControllerUser {
 
     @PostMapping()
     public User add(@Valid @RequestBody UserModel model){
-        return serviceUser.add(model);
+        return serviceUser.add(model.getSurname(), model.getName(), model.getPatronymic(), model.getAddress(), model.getPhone());
     }
 
     @GetMapping("/{idOrPhone}")
