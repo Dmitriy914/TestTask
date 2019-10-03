@@ -6,8 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import example.entity.Transaction;
 
 public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
-    Iterable<Transaction> findByAccountSendAndAccountGetOrderByDateAsc(Account send, Account get);
-    Iterable<Transaction> findByAccountSendAndAccountGetOrderByDateDesc(Account send, Account get);
+    Iterable<Transaction> findByAccountSendAndAccountGetOrderByInstantAsc(Account send, Account get);
+    Iterable<Transaction> findByAccountSendAndAccountGetOrderByInstantDesc(Account send, Account get);
 
     @Query(value = "SELECT * FROM TRANSACTION INNER JOIN account ON((transaction.account_send_id = account.id) OR (transaction.account_get_id = account.id)) where user_id = ?1", nativeQuery = true)
     Iterable<Transaction> findByUser(Integer id);

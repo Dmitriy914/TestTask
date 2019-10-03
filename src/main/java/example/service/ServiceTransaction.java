@@ -58,8 +58,8 @@ public class ServiceTransaction {
         if(get == null) throw new NotFoundException("Account get");
 
         switch(sortMode){
-            case ASC: return repository.findByAccountSendAndAccountGetOrderByDateAsc(send, get);
-            case DESC: return repository.findByAccountSendAndAccountGetOrderByDateDesc(send, get);
+            case ASC: return repository.findByAccountSendAndAccountGetOrderByInstantAsc(send, get);
+            case DESC: return repository.findByAccountSendAndAccountGetOrderByInstantDesc(send, get);
             default: return null;
         }
     }
