@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -29,6 +29,5 @@ public class Transaction {
     private BigDecimal amount;
 
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Instant instant;
 }

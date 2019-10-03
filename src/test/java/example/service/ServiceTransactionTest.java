@@ -24,7 +24,7 @@ public class ServiceTransactionTest {
     @Before
     public void initialization(){
         repositoryMock = mock(TransactionRepository.class);
-        service = new ServiceTransaction(repositoryMock);
+        service = new ServiceTransaction(repositoryMock, serviceAccount, serviceUser, serviceBank);
     }
 
     @Test

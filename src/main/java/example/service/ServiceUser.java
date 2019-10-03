@@ -2,9 +2,11 @@ package example.service;
 
 import example.entity.User;
 import example.exception.DuplicateException;
+import example.exception.NotFoundException;
 import example.model.UserModel;
 import example.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ServiceUser {
@@ -14,6 +16,7 @@ public class ServiceUser {
         this.repository = repository;
     }
 
+    @Transactional
     public User add(UserModel model){
         if(repository.existsByPhone(model.getPhone())){
             throw new DuplicateException("phone");
@@ -28,10 +31,12 @@ public class ServiceUser {
     }
 
     public User search(String idOrPhone){
-        if(checkNumeric((idOrPhone))){
-            return repository.findById(Integer.parseInt(idOrPhone)).orElse(null);
-        }
-        return repository.findByPhone(idOrPhone).orElse(null);
+        User user;
+        if(checkNumeric(idOrPhone)) user = repository.findById(Integer.parseInt(idOrPhone)).orElse(null);
+        else user = repository.findByPhone(idOrPhone).orElse(null);
+
+        if(user == null) throw new NotFoundException("User");
+        else return user;
     }
 
     private boolean checkNumeric(String s){

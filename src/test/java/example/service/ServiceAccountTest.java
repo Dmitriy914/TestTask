@@ -5,12 +5,9 @@ import example.entity.Bank;
 import example.entity.User;
 import example.exception.DuplicateException;
 import example.repository.AccountRepository;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,7 +21,7 @@ public class ServiceAccountTest {
     @Before
     public void initialization(){
         repositoryMock = mock(AccountRepository.class);
-        service = new ServiceAccount(repositoryMock);
+        service = new ServiceAccount(repositoryMock, serviceUser, serviceBank);
     }
 
     @Test

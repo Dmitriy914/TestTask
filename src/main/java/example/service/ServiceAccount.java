@@ -7,40 +7,47 @@ import example.exception.DuplicateException;
 import example.repository.AccountRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @Service
 public class ServiceAccount {
     private final AccountRepository repository;
+    private final ServiceUser serviceUser;
+    private final ServiceBank serviceBank;
 
-    public ServiceAccount(AccountRepository repository) {
+    public ServiceAccount(AccountRepository repository, ServiceUser serviceUser, ServiceBank serviceBank) {
         this.repository = repository;
+        this.serviceUser = serviceUser;
+        this.serviceBank = serviceBank;
     }
 
-    public Account add(User user, Bank bank){
+    @Transactional
+    public Account add(String userIdOrPhone, String bankIdOrNameOrPhone){
+        User user = serviceUser.search(userIdOrPhone);
+        Bank bank = serviceBank.search(bankIdOrNameOrPhone);
         if(repository.existsByUserAndBank(user, bank)){
             throw new DuplicateException("user, bank");
         }
         Account account = new Account();
         account.setUser(user);
         account.setBank(bank);
-        account.setBalance(BigDecimal.ZERO.setScale(2));
+        account.setBalance(BigDecimal.ZERO);
         account.setAccountNumber(generateAccountNumber());
         return repository.save(account);
     }
 
     public Account search(String idOrAccountNumber){
-        if(checkNumeric(idOrAccountNumber)){
-            Optional<Account> account = repository.findById(Integer.parseInt(idOrAccountNumber));
-            if(account.isPresent()) return account.get();
-        }
-        return repository.findByAccountNumber(idOrAccountNumber).orElse(null);
+        Account account = null;
+        if(checkNumeric(idOrAccountNumber)) account = repository.findById(Integer.parseInt(idOrAccountNumber)).orElse(null);
+        if(account == null) account = repository.findByAccountNumber(idOrAccountNumber).orElse(null);
+        return account;
     }
 
-    public Iterable<Account> getAccountsByUser(User user){
-        return repository.findByUserId(user.getId());
+    @Transactional
+    public Iterable<Account> getAccountsByUser(String user){
+        return repository.findByUserId(serviceUser.search(user).getId());
     }
 
     private String generateAccountNumber(){

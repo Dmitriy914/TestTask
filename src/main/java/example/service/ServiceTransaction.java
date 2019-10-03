@@ -1,60 +1,76 @@
 package example.service;
 
 import example.entity.Account;
-import example.entity.Bank;
 import example.entity.Transaction;
-import example.entity.User;
 import example.exception.BalanceException;
+import example.exception.NotFoundException;
 import example.exception.ScaleException;
+import example.model.SortMode;
 import example.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.Instant;
 
 @Service
 public class ServiceTransaction {
     private final TransactionRepository repository;
+    private final ServiceAccount serviceAccount;
+    private final ServiceUser serviceUser;
+    private final ServiceBank serviceBank;
 
-    public ServiceTransaction(TransactionRepository repository) {
+    public ServiceTransaction(TransactionRepository repository, ServiceAccount serviceAccount, ServiceUser serviceUser, ServiceBank serviceBank) {
         this.repository = repository;
+        this.serviceAccount = serviceAccount;
+        this.serviceUser = serviceUser;
+        this.serviceBank = serviceBank;
     }
 
     @Transactional
-    public Transaction add(Account send, Account get, BigDecimal amount){
-        if(amount.scale() > 2){
-            throw new ScaleException();
-        }
+    public Transaction add(String accountSend, String accountGet, BigDecimal amount){
+        Account send = serviceAccount.search(accountSend);
+        Account get = serviceAccount.search(accountGet);
+
+        if(send == null) throw new NotFoundException("Account send");
+        if(get == null) throw new NotFoundException("Account get");
+
         send.setBalance(send.getBalance().subtract(amount));
-        if(send.getBalance().compareTo(BigDecimal.ZERO) < 0){
-            throw new BalanceException();
-        }
         get.setBalance(get.getBalance().add(amount));
+
+        if(amount.scale() > 2) throw new ScaleException();
+        if(send.getBalance().compareTo(BigDecimal.ZERO) < 0) throw new BalanceException();
 
         Transaction transaction = new Transaction();
         transaction.setAccountGet(get);
         transaction.setAccountSend(send);
         transaction.setAmount(amount);
-        transaction.setDate(new Date());
+        transaction.setInstant(Instant.now());
 
         return repository.save(transaction);
     }
 
-    public Iterable<Transaction> search(Account accountSend, Account accountGet, String sortMode){
-        if(sortMode.equals("Asc")){
-            return repository.findByAccountSendAndAccountGetOrderByDateAsc(accountSend, accountGet);
+    @Transactional
+    public Iterable<Transaction> search(String accountSend, String accountGet, SortMode sortMode){
+        Account send = serviceAccount.search(accountSend);
+        Account get = serviceAccount.search(accountGet);
+
+        if(send == null) throw new NotFoundException("Account send");
+        if(get == null) throw new NotFoundException("Account get");
+
+        switch(sortMode){
+            case ASC: return repository.findByAccountSendAndAccountGetOrderByDateAsc(send, get);
+            case DESC: return repository.findByAccountSendAndAccountGetOrderByDateDesc(send, get);
+            default: return null;
         }
-        if(sortMode.equals("Desc")){
-            return repository.findByAccountSendAndAccountGetOrderByDateDesc(accountSend, accountGet);
-        }
-        return null;
     }
 
-    public Iterable<Transaction> getTransaction(User user){
-        return repository.findByUser(user.getId());
+    @Transactional
+    public Iterable<Transaction> getTransaction(String userIdOrPhone){
+        return repository.findByUser(serviceUser.search(userIdOrPhone).getId());
     }
 
-    public Iterable<Transaction> getTransactionByBank(User user, Bank bank){
-        return repository.findByUserAndBank(user.getId(), bank.getId());
+    @Transactional
+    public Iterable<Transaction> getTransactionByBank(String user, String bank){
+        return repository.findByUserAndBank(serviceUser.search(user).getId(), serviceBank.search(bank).getId());
     }
 }

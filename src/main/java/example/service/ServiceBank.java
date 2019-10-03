@@ -1,12 +1,12 @@
 package example.service;
 
 import example.entity.Bank;
+import example.exception.NotFoundException;
 import example.model.BankModel;
 import example.repository.BankRepository;
 import example.exception.DuplicateException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ServiceBank {
@@ -16,6 +16,7 @@ public class ServiceBank {
         this.repository = repository;
     }
 
+    @Transactional
     public Bank add(BankModel model){
         if(repository.existsByName(model.getName())) {
             throw new DuplicateException("name");
@@ -35,11 +36,13 @@ public class ServiceBank {
     }
 
     public Bank search(String idOrNameOrPhone){
-        if(checkNumeric((idOrNameOrPhone))){
-            return repository.findById(Integer.parseInt(idOrNameOrPhone)).orElse(null);
-        }
-        Optional<Bank> bank = repository.findByName(idOrNameOrPhone);
-        return bank.orElseGet(() -> repository.findByPhone(idOrNameOrPhone).orElse(null));
+        Bank bank;
+        if(checkNumeric((idOrNameOrPhone))) bank = repository.findById(Integer.parseInt(idOrNameOrPhone)).orElse(null);
+        else bank = repository.findByName(idOrNameOrPhone).orElse(null);
+        if(bank == null) bank = repository.findByPhone(idOrNameOrPhone).orElse(null);
+
+        if(bank == null) throw new NotFoundException("Bank");
+        else return bank;
     }
 
     private boolean checkNumeric(String s){
