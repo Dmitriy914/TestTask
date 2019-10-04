@@ -57,11 +57,10 @@ public class ControllerUserIntegrationTest extends ControllerTest{
 
     @Test
     public void searchWithStatusNotFound(){
-        ResponseEntity<HashMap> response = restTemplate.getForEntity("http://localhost:" + port + "/users/{id}", HashMap.class, 100);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/users/{id}", String.class, 100);
 
-        System.out.println(response.getBody());
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("User not found", response.getBody().get("message"));
+        assertEquals("User not found", response.getBody());
     }
 
     @Test

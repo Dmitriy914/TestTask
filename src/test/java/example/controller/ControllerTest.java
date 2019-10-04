@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.Instant;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
@@ -105,7 +105,7 @@ public abstract class ControllerTest {
         transaction.setAccountSend(send);
         transaction.setAccountGet(get);
         transaction.setAmount(new BigDecimal(amount));
-        //transaction.setDate(new Date(millisec));
+        transaction.setInstant(Instant.now());
         return transactionRepository.save(transaction);
     }
 }

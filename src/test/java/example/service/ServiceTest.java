@@ -21,7 +21,6 @@ abstract class ServiceTest {
     final ServiceAccount serviceAccountMock;
     final ServiceUser serviceUserMock;
     final ServiceBank serviceBankMock;
-    final ServiceTransaction serviceTransactionMock;
 
     final ServiceAccount serviceAccount;
     final ServiceUser serviceUser;
@@ -37,7 +36,6 @@ abstract class ServiceTest {
         serviceUserMock= mock(ServiceUser.class);
         serviceAccountMock = mock(ServiceAccount.class);
         serviceBankMock = mock(ServiceBank.class);
-        serviceTransactionMock = mock(ServiceTransaction.class);
 
         serviceAccount = new ServiceAccount(accountRepositoryMock, serviceUserMock, serviceBankMock);
         serviceTransaction = new ServiceTransaction(transactionRepositoryMock, serviceAccountMock, serviceUserMock, serviceBankMock);

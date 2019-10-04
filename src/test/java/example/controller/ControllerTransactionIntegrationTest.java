@@ -56,10 +56,10 @@ public class ControllerTransactionIntegrationTest extends ControllerTest{
         TransactionModel model = new TransactionModel(
                 "1", "2", new BigDecimal("12"));
 
-        ResponseEntity<HashMap> response = restTemplate.postForEntity("http://localhost:" + port + "/transactions", model, HashMap.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + port + "/transactions", model, String.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Account send not found", response.getBody().get("message"));
+        assertEquals("Account send not found", response.getBody());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class ControllerTransactionIntegrationTest extends ControllerTest{
 
         ResponseEntity<Transaction[]> response = restTemplate.getForEntity("http://localhost:" + port
                 + "/transactions?accountSendIdOrAccountNumber={send}&accountGetIdOrAccountNumber={get}&sortMode={mode}",
-                Transaction[].class, accountSend.getAccountNumber(), accountGet.getAccountNumber(), "Asc");
+                Transaction[].class, accountSend.getAccountNumber(), accountGet.getAccountNumber(), "ASC");
 
         Transaction[] responseBody = response.getBody();
 
@@ -97,7 +97,7 @@ public class ControllerTransactionIntegrationTest extends ControllerTest{
 
         ResponseEntity<Transaction[]> response = restTemplate.getForEntity("http://localhost:" + port
                         + "/transactions?accountSendIdOrAccountNumber={send}&accountGetIdOrAccountNumber={get}&sortMode={mode}",
-                Transaction[].class, accountSend.getAccountNumber(), accountGet.getAccountNumber(), "Desc");
+                Transaction[].class, accountSend.getAccountNumber(), accountGet.getAccountNumber(), "DESC");
 
         Transaction[] responseBody = response.getBody();
 
@@ -116,20 +116,21 @@ public class ControllerTransactionIntegrationTest extends ControllerTest{
 
     @Test
     public void errorSearchTransactionWithStatusBadRequest(){
-        ResponseEntity<HashMap> response = restTemplate.getForEntity("http://localhost:" + port
-                + "/transactions?accountSendIdOrAccountNumber={send}&accountGetIdOrAccountNumber={get}&sortMode={mode}", HashMap.class, "1", "2", "Ask");
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port
+                + "/transactions?accountSendIdOrAccountNumber={send}&accountGetIdOrAccountNumber={get}&sortMode={mode}", String.class, "1", "2", "Ask");
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Parameter (sortMode) should be (Asc) or (Desc)", response.getBody().get("message"));
+        assertEquals("Parameter (sortMode) should be (ASC) or (DESC)", response.getBody());
     }
 
     @Test
     public void errorSearchTransactionWithStatusNotFound(){
-        ResponseEntity<HashMap> response = restTemplate.getForEntity("http://localhost:" + port
-                + "/transactions?accountSendIdOrAccountNumber={send}&accountGetIdOrAccountNumber={get}&sortMode={mode}", HashMap.class, "100", "2", "Asc");
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port
+                + "/transactions?accountSendIdOrAccountNumber={send}&accountGetIdOrAccountNumber={get}&sortMode={mode}", String.class, "100", "2", "ASC");
 
+        System.out.println(response.getBody());
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Account send not found", response.getBody().get("message"));
+        assertEquals("Account send not found", response.getBody());
     }
 
     @Test

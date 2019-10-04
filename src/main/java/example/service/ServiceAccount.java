@@ -33,7 +33,7 @@ public class ServiceAccount {
         Account account = new Account();
         account.setUser(user);
         account.setBank(bank);
-        account.setBalance(BigDecimal.ZERO);
+        account.setBalance(BigDecimal.ZERO.setScale(2));
         account.setAccountNumber(generateAccountNumber());
         return repository.save(account);
     }

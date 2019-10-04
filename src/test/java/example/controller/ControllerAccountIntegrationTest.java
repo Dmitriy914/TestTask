@@ -46,9 +46,9 @@ public class ControllerAccountIntegrationTest extends ControllerTest{
         User user = createAndSaveUserRandom();
         AccountModel model = new AccountModel(user.getPhone(), "10");
 
-        ResponseEntity<HashMap> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", model, HashMap.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", model, String.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Bank not found", response.getBody().get("message"));
+        assertEquals("Bank not found", response.getBody());
     }
 }
