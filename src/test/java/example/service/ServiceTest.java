@@ -7,11 +7,14 @@ import example.repository.AccountRepository;
 import example.repository.BankRepository;
 import example.repository.TransactionRepository;
 import example.repository.UserRepository;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 
 import static org.mockito.Mockito.mock;
 
+@RunWith(SpringRunner.class)
 abstract class ServiceTest {
     final TransactionRepository transactionRepositoryMock;
     final UserRepository userRepositoryMock;

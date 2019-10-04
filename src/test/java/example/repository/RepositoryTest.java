@@ -30,15 +30,6 @@ public abstract class RepositoryTest {
     @Autowired
     TransactionRepository transactionRepository;
 
-    Account createAccountRandom(User user, Bank bank){
-        Account account = new Account();
-        account.setUser(user);
-        account.setBank(bank);
-        account.setBalance(new BigDecimal("100.00"));
-        account.setAccountNumber(RandomStringUtils.randomNumeric(10));
-        return account;
-    }
-
     User createAndSaveUserRandom(){
         User user = new User();
         user.setSurname(randomAlphabetic(10));

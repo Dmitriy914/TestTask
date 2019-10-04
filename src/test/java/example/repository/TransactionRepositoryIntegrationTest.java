@@ -13,8 +13,8 @@ import static org.junit.Assert.assertThat;
 public class TransactionRepositoryIntegrationTest extends RepositoryTest{
     @Test
     public void findByAccountSendAndAccountGetOrderByDateAsc(){
-        Account send = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
-        Account get = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account send = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account get = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
         Transaction transaction1 = createAndSaveTransaction(send, get, "12", 1L);
         Transaction transaction2 = createAndSaveTransaction(send, get, "21", 2L);
 
@@ -25,8 +25,8 @@ public class TransactionRepositoryIntegrationTest extends RepositoryTest{
 
     @Test
     public void findByAccountSendAndAccountGetOrderByDateDesc(){
-        Account send = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
-        Account get = createAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account send = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
+        Account get = createAndSaveAccountRandom(createAndSaveUserRandom(), createAndSaveBankRandom());
         Transaction transaction1 = createAndSaveTransaction(send, get, "12", 1L);
         Transaction transaction2 = createAndSaveTransaction(send, get, "21", 2L);
 
